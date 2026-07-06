@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="不動産営業マン個人のための現場ツール。ローン計算・マイソクPDF・スピード査定など約20機能をスマホ1台で。iOS/Android近日公開。">
+<title>エステートパートナー | 接客のその場で完結する不動産営業アプリ</title>
+<style>
+  /* ============ Reset ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; background: none; border: none; }
+
+  /* ============ Design tokens: light (default) ============ */
+  :root {
+    --ink: #0B2545;         /* 見出し・強調文字（ライト時） */
+    --brand: #0B2545;       /* ブランド固定色（アプリと同一・テーマ非依存） */
+    --brand-contrast: #FFFFFF;
+    --paper: #F7F9FC;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F8;
+    --text: #17233C;
+    --text-muted: #51607A;
+    --border: rgba(11, 37, 69, 0.14);
+    --brass: #B8892D;
+    --brass-text: #8C6720;  /* 小さめの文字色として使う濃いめの真鍮色（コントラスト確保） */
+    --ok: #1E5631;
+    --shadow: rgba(11, 37, 69, 0.14);
+    --focus: #0B2545;
+
+    --font-display: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+    --font-body: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #E7ECF6;
+      --surface: #101B2E;
+      --surface-2: #16233A;
+      --paper: #0A1220;
+      --text: #D7DFEE;
+      --text-muted: #93A2C0;
+      --border: rgba(215, 223, 238, 0.16);
+      --brass: #C99A3E;
+      --brass-text: #E3B564;
+      --ok: #3FAE72;
+      --shadow: rgba(0, 0, 0, 0.5);
+      --focus: #E7ECF6;
+      color-scheme: dark;
+    }
+  }
+
+  /* 手動テーマ切替（両方向で必ず勝つ） */
+  :root[data-theme="dark"] {
+    --ink: #E7ECF6;
+    --surface: #101B2E;
+    --surface-2: #16233A;
+    --paper: #0A1220;
+    --text: #D7DFEE;
+    --text-muted: #93A2C0;
+    --border: rgba(215, 223, 238, 0.16);
+    --brass: #C99A3E;
+    --brass-text: #E3B564;
+    --ok: #3FAE72;
+    --shadow: rgba(0, 0, 0, 0.5);
+    --focus: #E7ECF6;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --ink: #0B2545;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F8;
+    --paper: #F7F9FC;
+    --text: #17233C;
+    --text-muted: #51607A;
+    --border: rgba(11, 37, 69, 0.14);
+    --brass: #B8892D;
+    --brass-text: #8C6720;
+    --ok: #1E5631;
+    --shadow: rgba(11, 37, 69, 0.14);
+    --focus: #0B2545;
+    color-scheme: light;
+  }
+
+  /* ============ Base ============ */
+  html { font-size: 16px; }
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    line-height: 1.45;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  p { color: var(--text); }
+  .measure { max-width: 34em; }
+  .num { font-variant-numeric: tabular-nums; }
+
+  a:focus-visible,
+  button:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ============ Layout ============ */
+  .container {
+    max-width: 1080px;
+    margin-inline: auto;
+    padding-inline: clamp(1.1rem, 4vw, 2.5rem);
+  }
+  .section {
+    padding-block: clamp(2.75rem, 4vw + 1.2rem, 5.5rem);
+  }
+  .section--alt { background: var(--surface-2); }
+  .section-head {
+    margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
+  }
+  .eyebrow {
+    display: block;
+    font-size: 0.78rem;
+    letter-spacing: 0.16em;
+    color: var(--brass-text);
+    font-weight: 700;
+    margin-bottom: 0.7em;
+  }
+  .section-title {
+    font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2.1rem);
+  }
+  .section-sub {
+    margin-top: 0.9rem;
+    color: var(--text-muted);
+    max-width: 42em;
+  }
+
+  /* ============ Skip link ============ */
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+    background: var(--ink);
+    color: var(--brand-contrast);
+    padding: 0.6rem 1rem;
+    border-radius: 4px;
+    z-index: 100;
+    transition: none;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+
+  /* ============ Icon sprite (hidden defs) ============ */
+  .icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
+  .icon {
+    width: 1.3em;
+    height: 1.3em;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    flex-shrink: 0;
+  }
+
+  /* ============ Top bar ============ */
+  .topbar {
+    padding-block: 1.1rem;
+  }
+  .topbar .container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+  }
+  .brandmark {
+    display: flex;
+    align-items: baseline;
+    gap: 0.55em;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--ink);
+    letter-spacing: 0.02em;
+  }
+  .brandmark small {
+    font-family: var(--font-body);
+    font-size: 0.68rem;
+    font-weight: 400;
+    color: var(--text-muted);
+    letter-spacing: 0.06em;
+  }
+  .toplinks {
+    display: flex;
+    gap: clamp(1rem, 3vw, 1.75rem);
+    font-size: 0.86rem;
+  }
+  .toplinks a {
+    text-decoration: none;
+    color: var(--text-muted);
+    border-bottom: 1px solid transparent;
+  }
+  .toplinks a:hover { color: var(--ink); border-color: var(--border); }
+
+  /* ============ Hero ============ */
+  .hero .container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 5vw, 3rem);
+    align-items: center;
+    padding-block: clamp(1.5rem, 3vw, 3rem) clamp(2.5rem, 4vw, 3.5rem);
+  }
+  @media (min-width: 900px) {
+    .hero .container {
+      grid-template-columns: 1.08fr 0.92fr;
+    }
+  }
+  .hero-copy .eyebrow { color: var(--brass-text); }
+  .hero-title {
+    font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);
+    margin-bottom: 1.1rem;
+  }
+  .hero-lead {
+    color: var(--text-muted);
+    font-size: 1.05rem;
+    max-width: 30em;
+    margin-bottom: 1.9rem;
+  }
+  .hero-trust {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.1rem;
+    margin-bottom: 2.1rem;
+    font-size: 0.86rem;
+    color: var(--text-muted);
+  }
+  .hero-trust li { display: flex; align-items: center; gap: 0.45em; }
+  .hero-trust .icon { width: 1.05em; height: 1.05em; color: var(--ok); }
+
+  .cta-area {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 1.1rem;
+  }
+  .badge-soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    border: 1px solid var(--brass);
+    color: var(--brass-text);
+    font-weight: 700;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    padding: 0.55em 1.05em;
+    border-radius: 999px;
+  }
+  .badge-soon::before {
+    content: "";
+    width: 0.5em;
+    height: 0.5em;
+    border-radius: 50%;
+    background: var(--brass);
+  }
+  .cta-store-note {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .hero-fade {
+    animation: heroFade 0.8s ease-out both;
+  }
+  .hero-fade.d2 { animation-delay: 0.12s; }
+  .hero-fade.d3 { animation-delay: 0.22s; }
+  @keyframes heroFade {
+    from { opacity: 0; transform: translateY(14px); }
+    to { opacity: 1; transform: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-fade { animation: none; }
+  }
+
+  /* ============ Phone mockup ============ */
+  .phone-wrap {
+    display: flex;
+    justify-content: center;
+  }
+  .phone {
+    width: min(78vw, 280px);
+    background: #050B14;
+    border-radius: 42px;
+    padding: 12px;
+    box-shadow: 0 30px 60px -20px var(--shadow), 0 2px 0 rgba(255,255,255,0.04) inset;
+  }
+  .phone-notch {
+    width: 40%;
+    height: 20px;
+    background: #050B14;
+    border-radius: 0 0 14px 14px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+  }
+  .phone-screen {
+    background: var(--surface);
+    border-radius: 30px;
+    overflow: hidden;
+    margin-top: -20px;
+    display: flex;
+    flex-direction: column;
+    min-height: 470px;
+  }
+  .phone-statusbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 1.1rem 0.2rem;
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+  .phone-statusbar .glyphs { display: flex; align-items: center; gap: 0.35em; }
+  .sig-bar { display: flex; align-items: flex-end; gap: 2px; height: 8px; }
+  .sig-bar span { width: 2.5px; background: var(--ink); display: block; border-radius: 1px; }
+  .sig-bar span:nth-child(1){ height: 40%; }
+  .sig-bar span:nth-child(2){ height: 60%; }
+  .sig-bar span:nth-child(3){ height: 80%; }
+  .sig-bar span:nth-child(4){ height: 100%; }
+  .batt { width: 18px; height: 9px; border: 1px solid var(--ink); border-radius: 2px; position: relative; padding: 1px; }
+  .batt::after { content:""; display:block; width: 78%; height: 100%; background: var(--ink); border-radius: 1px; }
+
+  .phone-appheader {
+    background: var(--brand);
+    color: var(--brand-contrast);
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .phone-appheader .name {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+  }
+  .phone-appheader .dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    border: 1.4px solid rgba(255,255,255,0.55);
+  }
+
+  .phone-body {
+    flex: 1;
+    background: var(--surface-2);
+    padding: 0.8rem 0.7rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .phone-row {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0.6rem 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+  }
+  .phone-row .icon-box {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+  }
+  .phone-row .icon-box .icon { width: 1.05em; height: 1.05em; }
+  .phone-row .label {
+    font-size: 0.78rem;
+    color: var(--text);
+    flex: 1;
+    font-weight: 600;
+  }
+  .phone-row .chev { color: var(--text-muted); font-size: 0.8rem; }
+
+  .phone-tabbar {
+    display: flex;
+    background: var(--brand);
+    padding: 0.55rem 0.4rem 0.75rem;
+  }
+  .phone-tab {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    color: rgba(255,255,255,0.55);
+    font-size: 0.62rem;
+    letter-spacing: 0.02em;
+  }
+  .phone-tab .icon { width: 1.15em; height: 1.15em; }
+  .phone-tab.active {
+    color: var(--brand-contrast);
+  }
+  .phone-tab.active .icon-holder {
+    background: rgba(255,255,255,0.16);
+    border-radius: 8px;
+  }
+  .icon-holder { padding: 0.15rem 0.5rem; }
+
+  /* ============ Problem section ============ */
+  .problem-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1.25rem;
+  }
+  .problem-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1.5rem;
+  }
+  .problem-card h3 {
+    font-family: var(--font-body);
+    font-size: 1.02rem;
+    color: var(--ink);
+    margin-bottom: 0.6rem;
+  }
+  .problem-card p {
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+
+  /* ============ Timeline ============ */
+  .timeline {
+    position: relative;
+    padding-left: clamp(1.5rem, 4vw, 2.5rem);
+    border-left: 2px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.8rem, 3vw, 2.6rem);
+  }
+  .timeline-item { position: relative; }
+  .timeline-dot {
+    position: absolute;
+    left: calc(clamp(1.5rem, 4vw, 2.5rem) * -1 - 6px);
+    top: 0.3rem;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 2px solid var(--brass);
+  }
+  .timeline-time {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    color: var(--brass-text);
+    font-weight: 700;
+    font-size: 1.05rem;
+    margin-bottom: 0.4rem;
+  }
+  .timeline-time .icon { color: var(--brass-text); width: 1.1em; height: 1.1em; }
+  .timeline-item h3 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
+  .timeline-item .tools {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 0.55rem;
+  }
+  .timeline-item .scene {
+    color: var(--text);
+    max-width: 36em;
+  }
+
+  /* ============ Features grid ============ */
+  .tab-block { margin-bottom: clamp(2rem, 3vw, 2.75rem); }
+  .tab-block:last-child { margin-bottom: 0; }
+  .tab-block-head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+  .tab-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4em;
+    font-size: 0.75rem;
+    letter-spacing: 0.08em;
+    padding: 0.3em 0.85em;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--ink);
+    font-weight: 700;
+  }
+  .tab-chip .icon { width: 1em; height: 1em; }
+  .tab-block-head h3 {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--text-muted);
+    font-weight: 400;
+  }
+  .subgroup-label {
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin: 1.1rem 0 0.6rem;
+    font-weight: 700;
+  }
+  .subgroup-label:first-of-type { margin-top: 0; }
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    gap: 0.9rem;
+  }
+  .feature-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+  }
+  .feature-card h4 {
+    font-family: var(--font-body);
+    font-size: 0.92rem;
+    color: var(--ink);
+    font-weight: 700;
+    margin-bottom: 0.35rem;
+  }
+  .feature-card p {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+
+  /* ============ Pillars ============ */
+  .pillars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.4rem;
+  }
+  .pillar-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.8rem;
+  }
+  .pillar-icon {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: var(--surface-2);
+    display: flex; align-items: center; justify-content: center;
+    color: var(--ink);
+    margin-bottom: 1.1rem;
+  }
+  .pillar-icon .icon { width: 1.4em; height: 1.4em; }
+  .pillar-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
+  .pillar-card p { color: var(--text-muted); font-size: 0.92rem; }
+
+  /* ============ Pricing ============ */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.4rem;
+    align-items: stretch;
+  }
+  .price-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.9rem;
+    display: flex;
+    flex-direction: column;
+  }
+  .price-card--premium {
+    border: 2px solid var(--ink);
+  }
+  .price-plan {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.9rem;
+  }
+  .price-amount {
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    color: var(--ink);
+    margin-bottom: 0.3rem;
+  }
+  .price-amount .unit { font-size: 0.95rem; color: var(--text-muted); font-family: var(--font-body); }
+  .price-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.4rem; }
+  .price-desc { color: var(--text); font-size: 0.92rem; margin-top: auto; }
+  .price-note {
+    margin-top: 1.4rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  /* ============ FAQ ============ */
+  .faq-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.2rem 1.2rem;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 0;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .chev {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  .faq-item[open] summary .chev { transform: rotate(180deg); }
+  .faq-item .faq-a {
+    padding-bottom: 1.1rem;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+    max-width: 40em;
+  }
+
+  /* ============ Footer ============ */
+  .site-footer {
+    background: var(--brand);
+    color: rgba(255,255,255,0.86);
+    padding-block: clamp(2.5rem, 4vw, 3.5rem) 2rem;
+  }
+  .site-footer .concept {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    color: #fff;
+    max-width: 24em;
+    margin-bottom: 0.9rem;
+  }
+  .site-footer .soon {
+    font-size: 0.92rem;
+    color: rgba(255,255,255,0.75);
+    margin-bottom: 1.8rem;
+  }
+  .footer-rule {
+    border-top: 1px solid rgba(255,255,255,0.18);
+    padding-top: 1.4rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .disclaimer {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.55);
+    max-width: 42em;
+  }
+  .copyright {
+    font-size: 0.76rem;
+    color: rgba(255,255,255,0.55);
+  }
+  .footer-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    font-size: 0.76rem;
+  }
+  .footer-links a {
+    color: rgba(255,255,255,0.7);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .footer-links a:hover { color: #fff; }
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#main">メインコンテンツへスキップ</a>
+
+<svg class="icon-sprite" aria-hidden="true">
+  <defs>
+    <symbol id="i-house" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5M6 10.3V20h5v-5h2v5h5v-9.7"/></symbol>
+    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a3.8 3.8 0 0 1-5 5L4.3 16.7l3 3L12.7 15a3.8 3.8 0 0 1 5-5l-2.5 2.5-2-2z"/></symbol>
+    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16 15.3 10.7"/><circle cx="12" cy="16" r="1.1"/></symbol>
+    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.4M12 18.6V21M4.5 7.5l2 1.2M17.5 15.3l2 1.2M3 12h2.4M18.6 12H21M4.5 16.5l2-1.2M17.5 8.7l2-1.2M8 4.5l1.2 2M14.8 17.5l1.2 2M8 19.5l1.2-2M14.8 6.5l1.2-2"/></symbol>
+    <symbol id="i-yen" viewBox="0 0 24 24"><path d="M7 4l5 7 5-7M12 11v9M8.3 13.6h7.4M8.3 16.6h7.4"/></symbol>
+    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M15.2 8.8l-2 5.2-5.2 2 2-5.2z"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.3 12h5.4M9.3 15h5.4M9.3 9h2.2"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.6"/><path d="M8 12.6l2.3 2.3L16 9.4"/></symbol>
+    <symbol id="i-device" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="1.7"/><path d="M11 18h2"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
+    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M8.6 12.2a7 7 0 0 1 7.5-1.5M5.4 9a11 11 0 0 1 4-2.2M10.7 16.3a1.85 1.85 0 1 0 2.6 2.6"/></symbol>
+  </defs>
+</svg>
+
+<header class="topbar">
+  <div class="container">
+    <div class="brandmark">エステートパートナー<small>EstatePartner</small></div>
+    <nav class="toplinks" aria-label="ページ内メニュー">
+      <a href="#features">全機能一覧</a>
+      <a href="#pricing">価格</a>
+      <a href="#faq">よくある質問</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+
+  <!-- 1. ヒーロー -->
+  <section class="hero">
+    <div class="container">
+      <div class="hero-copy">
+        <span class="eyebrow hero-fade">不動産営業の現場ツール／iOS・Android 近日公開</span>
+        <h1 class="hero-title hero-fade d2">接客の、その場で完結。</h1>
+        <p class="hero-lead hero-fade d2">
+          商談の最中も、現地の内見でも、資料作成の夜も。
+          営業マン個人が、自分のスマホ1台で、接客のその場で完結させるためのアプリです。
+        </p>
+        <ul class="hero-trust hero-fade d3">
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>会社契約・アカウント発行不要</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>データは端末内保存・クラウド送信なし</li>
+          <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>オフライン優先</li>
+        </ul>
+        <div class="cta-area hero-fade d3">
+          <span class="badge-soon">近日公開</span>
+          <span class="cta-store-note">App Store / Google Play にて公開予定</span>
+        </div>
+      </div>
+
+      <div class="phone-wrap hero-fade d3">
+        <div class="phone" role="img" aria-label="エステートパートナーのアプリ画面イメージ。ツールタブに、ローンシミュレーション・資金計画・家賃から買える価格・方位磁石・スピード査定などのメニューが並ぶ。下部タブは物件・ツール・査定・設定。">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="phone-statusbar">
+              <span class="num">9:41</span>
+              <span class="glyphs">
+                <span class="sig-bar"><span></span><span></span><span></span><span></span></span>
+                <span class="batt"></span>
+              </span>
+            </div>
+            <div class="phone-appheader">
+              <span class="name">エステートパートナー</span>
+              <span class="dot"></span>
+            </div>
+            <div class="phone-body">
+              <div class="phone-row">
+                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-yen"></use></svg></span>
+                <span class="label">ローンシミュレーション</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="phone-row">
+                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg></span>
+                <span class="label">資金計画・諸費用概算</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="phone-row">
+                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-house"></use></svg></span>
+                <span class="label">家賃から買える価格</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="phone-row">
+                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-compass"></use></svg></span>
+                <span class="label">方位磁石</span>
+                <span class="chev">›</span>
+              </div>
+              <div class="phone-row">
+                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg></span>
+                <span class="label">スピード査定</span>
+                <span class="chev">›</span>
+              </div>
+            </div>
+            <div class="phone-tabbar">
+              <span class="phone-tab"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-house"></use></svg></span>物件</span>
+              <span class="phone-tab active"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-tool"></use></svg></span>ツール</span>
+              <span class="phone-tab"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg></span>査定</span>
+              <span class="phone-tab"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-gear"></use></svg></span>設定</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 課題 -->
+  <section class="section section--alt" id="problem">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">会社のシステムは、現場まで来てくれない。</h2>
+        <p class="section-sub">商談中、現地、そして事務所に戻ってからも――営業マン個人が抱える不便は、いつも「その場」で起きています。</p>
+      </div>
+      <div class="problem-grid">
+        <article class="problem-card">
+          <h3>商談中に即答できない</h3>
+          <p class="measure">「月々いくらになりますか」「いくらまで借りられますか」と聞かれても、その場で計算できず、後日の連絡になってしまう。</p>
+        </article>
+        <article class="problem-card">
+          <h3>現地で電波が弱い</h3>
+          <p class="measure">内見や現地調査の最中、会社のシステムに繋がらない場所は珍しくない。確認したいのに確認できない。</p>
+        </article>
+        <article class="problem-card">
+          <h3>夜の資料作成</h3>
+          <p class="measure">事務所に戻ってから、深夜にマイソクや資金計画書を作り直す。翌朝までに間に合わせるための残業が続く。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. 営業マンの一日（タイムライン） -->
+  <section class="section" id="day">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">営業マンの一日</h2>
+        <p class="section-sub">商談から契約準備、売却相談まで。一日の現場を、スマホ1台でその場で完結させる。</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-yen"></use></svg><span class="num">10:00</span> 商談中の即答</div>
+          <h3>お客様の質問に、その場で数字を出す</h3>
+          <p class="tools">使う機能: ローンシミュレーション・資金計画・家賃から買える価格・金利マスタ</p>
+          <p class="scene measure">「月々いくらになりますか」と聞かれても、ローン計算と資金計画を開けばその場で数字が出せる。今の家賃を基準にした購入可能価格も、その場で逆算できる。</p>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-compass"></use></svg><span class="num">13:00</span> 現地・内見</div>
+          <h3>方角も音も、その場で確認する</h3>
+          <p class="tools">使う機能: 方位磁石・日当たりシミュレーション・騒音メーター・現地調査チェック・写真動画</p>
+          <p class="scene measure">方角と日当たり、周辺の音を確認しながら現地調査チェックの項目を埋めていく。写真もその場で撮り、物件ごとに撮り漏れなく残せる。</p>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg><span class="num">16:00</span> 資料作成</div>
+          <h3>事務所に戻らなくても資料ができる</h3>
+          <p class="tools">使う機能: マイソクPDF・内見比較シート・資金計画書PDF</p>
+          <p class="scene measure">車の中や移動の合間に、マイソクと資金計画書のPDFを作って共有できる。複数物件を見たお客様には、内見比較シートで違いを整理して渡せる。</p>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span class="num">18:00</span> 契約準備</div>
+          <h3>契約日が決まったら、その場で工程表を作る</h3>
+          <p class="tools">使う機能: 契約スケジュール・必要書類チェック・重説要点ガイド</p>
+          <p class="scene measure">契約日が決まったら標準6工程のスケジュールを自動生成。必要書類の準備状況を確認し、重説の要点も事前に見直しておける。</p>
+        </div>
+        <div class="timeline-item">
+          <span class="timeline-dot"></span>
+          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg>随時 売却相談</div>
+          <h3>「売ったらいくら？」に、その場で応える</h3>
+          <p class="tools">使う機能: スピード査定</p>
+          <p class="scene measure">売却を検討しているお客様から声をかけられても、その場でスピード査定を開いて参考価格レンジを示せる。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. 全機能一覧 -->
+  <section class="section section--alt" id="features">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">全機能一覧</h2>
+        <p class="section-sub">物件・ツール・査定・設定の4つのタブに、約20の機能を用意しています。</p>
+      </div>
+
+      <div class="tab-block">
+        <div class="tab-block-head">
+          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-house"></use></svg>物件</span>
+          <h3>物件情報と現地調査を一元管理</h3>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><h4>物件一元管理</h4><p>一覧・検索・種別フィルタから登録・編集・削除まで一元管理。</p></article>
+          <article class="feature-card"><h4>Excel取込</h4><p>自作の.xlsx/.xls/.csvを列の自動マッピングで一括取込。</p></article>
+          <article class="feature-card"><h4>写真・動画</h4><p>アプリ内カメラで撮影し物件ごとに保存、動画も再生管理。</p></article>
+          <article class="feature-card"><h4>マイソクPDF</h4><p>写真・坪単価・担当者情報入りのA4販売図面をその場で作成・共有。</p></article>
+          <article class="feature-card"><h4>現地調査チェック</h4><p>カテゴリ別18項目とカスタム項目で確認漏れを防止。</p></article>
+        </div>
+      </div>
+
+      <div class="tab-block">
+        <div class="tab-block-head">
+          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-tool"></use></svg>ツール</span>
+          <h3>お金の計算・現地調査・商談と契約を支える機能</h3>
+        </div>
+
+        <p class="subgroup-label">お金の計算</p>
+        <div class="feature-grid">
+          <article class="feature-card"><h4>ローンシミュレーション</h4><p>元利均等/元金均等・ボーナス併用・返済額からの逆算・年次償還表。</p></article>
+          <article class="feature-card"><h4>資金計画・諸費用概算</h4><p>仲介手数料・税金・登記・保険まで自動概算し、資金計画書PDFへ。</p></article>
+          <article class="feature-card"><h4>家賃から買える価格</h4><p>今の家賃と同じ負担で買える価格を逆算。</p></article>
+          <article class="feature-card"><h4>住み替え手残り</h4><p>売却価格から残債・諸費用を引いた手残りと、次の購入予算の目安を試算。</p></article>
+          <article class="feature-card"><h4>利回り計算</h4><p>表面/実質利回りと返済後キャッシュフローを算出。</p></article>
+          <article class="feature-card"><h4>金利マスタ</h4><p>主要8行の金利をプリセット管理。更新タイミングも通知。</p></article>
+        </div>
+
+        <p class="subgroup-label">現地調査</p>
+        <div class="feature-grid">
+          <article class="feature-card"><h4>方位磁石</h4><p>真方位優先で16方位と住宅表記の向きを表示。</p></article>
+          <article class="feature-card"><h4>日当たりシミュレーション</h4><p>太陽位置計算で、季節・時刻ごとの日当たりをオフラインで判定。</p></article>
+          <article class="feature-card"><h4>騒音メーター</h4><p>その場で簡易的な音の大きさを計測し、物件メモに追記保存。</p></article>
+          <article class="feature-card"><h4>坪・㎡・畳換算</h4><p>坪・㎡・畳を3方向即時換算。坪単価⇔㎡単価も。</p></article>
+          <article class="feature-card"><h4>建ぺい率・容積率</h4><p>前面道路制限やセットバックを踏まえて概算。</p></article>
+        </div>
+
+        <p class="subgroup-label">商談・契約</p>
+        <div class="feature-grid">
+          <article class="feature-card"><h4>内見比較シート</h4><p>物件2〜4件を◎○△で比較し、表形式で共有。</p></article>
+          <article class="feature-card"><h4>契約スケジュール</h4><p>標準6工程を自動生成。土日は翌営業日に自動調整。</p></article>
+          <article class="feature-card"><h4>必要書類チェック</h4><p>属性・フェーズ別に必要書類を整理し、テキストで共有。</p></article>
+          <article class="feature-card"><h4>重説要点ガイド</h4><p>種別別53項目の説明ポイントと事前確認事項を検索・確認。</p></article>
+        </div>
+      </div>
+
+      <div class="tab-block">
+        <div class="tab-block-head">
+          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg>査定</span>
+          <h3>売却相談のその場で参考価格を</h3>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><h4>スピード査定</h4><p>国土交通省「不動産情報ライブラリ」のデータから参考価格レンジを算出。</p></article>
+        </div>
+      </div>
+
+      <div class="tab-block">
+        <div class="tab-block-head">
+          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-gear"></use></svg>設定</span>
+          <h3>アプリまわりの管理</h3>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><h4>各種設定</h4><p>査定APIキーの登録・取得方法の案内、金利マスタへの導線、アプリ情報を管理。</p></article>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. 3つのこだわり -->
+  <section class="section" id="pillars">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">3つのこだわり</h2>
+        <p class="section-sub">会社導入型のSaaSではなく、営業マン個人のためのツールとして設計しています。</p>
+      </div>
+      <div class="pillars-grid">
+        <article class="pillar-card">
+          <span class="pillar-icon"><svg class="icon" aria-hidden="true"><use href="#i-device"></use></svg></span>
+          <h3>会社契約・アカウント発行不要</h3>
+          <p>会社のシステム導入や管理者によるアカウント発行を待つ必要はありません。個人のスマホ1台があれば、今日から使い始められます。</p>
+        </article>
+        <article class="pillar-card">
+          <span class="pillar-icon"><svg class="icon" aria-hidden="true"><use href="#i-lock"></use></svg></span>
+          <h3>データはすべて端末内保存</h3>
+          <p>物件情報や写真、設定はすべて端末内に保存され、クラウドへは送信されません。お客様の情報を扱う不安を減らします。</p>
+        </article>
+        <article class="pillar-card">
+          <span class="pillar-icon"><svg class="icon" aria-hidden="true"><use href="#i-offline"></use></svg></span>
+          <h3>オフライン優先</h3>
+          <p>現地で電波が弱くても、主要な機能は動作します。ネット接続が必要なのは、査定APIと外部リンクを開くときだけです。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. 価格 -->
+  <section class="section section--alt" id="pricing">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">価格</h2>
+        <p class="section-sub">まずは無料で試せます。すべての機能を使いたい方にはプレミアムプランを予定しています。</p>
+      </div>
+      <div class="pricing-grid">
+        <article class="price-card">
+          <div class="price-plan">無料プラン</div>
+          <div class="price-amount num">¥0</div>
+          <div class="price-sub">基本無料ではじめられます</div>
+          <p class="price-desc">まずは無料で、日々の営業に役立つ機能をお試しいただけます。</p>
+        </article>
+        <article class="price-card price-card--premium">
+          <div class="price-plan">プレミアムプラン</div>
+          <div class="price-amount num">¥980 <span class="unit">/ 月</span></div>
+          <div class="price-sub num">年額 ¥9,800（税込・予定）</div>
+          <p class="price-desc">すべての機能を制限なくご利用いただけます。</p>
+        </article>
+      </div>
+      <p class="price-note">価格・プラン内容は公開時に変更となる場合があります。</p>
+    </div>
+  </section>
+
+  <!-- 7. FAQ -->
+  <section class="section" id="faq">
+    <div class="container">
+      <div class="section-head">
+        <h2 class="section-title">よくある質問</h2>
+      </div>
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>対応OSを教えてください<span class="chev">▾</span></summary>
+          <p class="faq-a">iOS・Androidに対応予定です。現在近日公開に向けて準備中で、ストアURLは未定です。</p>
+        </details>
+        <details class="faq-item">
+          <summary>入力したデータはどこに保存されますか<span class="chev">▾</span></summary>
+          <p class="faq-a">物件情報や写真、設定はすべて端末内に保存され、クラウドへは送信されません。</p>
+        </details>
+        <details class="faq-item">
+          <summary>査定は何のデータをもとにしていますか<span class="chev">▾</span></summary>
+          <p class="faq-a">国土交通省が提供する「不動産情報ライブラリ」のAPIを利用しています。ご利用には無料のAPIキー申請が必要で、算出される価格はあくまで参考価格です。</p>
+        </details>
+        <details class="faq-item">
+          <summary>利用にあたって会社の許可は必要ですか<span class="chev">▾</span></summary>
+          <p class="faq-a">個人が使う現場ツールで、会社のシステムとの連携はありません。ご自身の判断でお使いいただけます。</p>
+        </details>
+        <details class="faq-item">
+          <summary>電波が弱い場所でも使えますか<span class="chev">▾</span></summary>
+          <p class="faq-a">主要な機能はオフライン優先で動作します。ネット接続が必要なのは、査定APIと外部リンクを利用するときだけです。</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<!-- 8. フッター -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="concept">営業マン個人が、自分のスマホ1台で、接客のその場で完結。</p>
+    <p class="soon">エステートパートナー（EstatePartner）は iOS / Android 向けに近日公開予定です。</p>
+    <div class="footer-rule">
+      <p class="disclaimer">本アプリの計算・査定結果はすべて概算・参考値です。正式な金額・法令適合は各専門家・役所にご確認ください。価格・プラン内容は公開時に変更となる場合があります。</p>
+      <p class="footer-links">
+        <a href="privacy.html">プライバシーポリシー</a>
+        <a href="support.html">サポート</a>
+      </p>
+      <p class="copyright">&copy; 2026 EstatePartner</p>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

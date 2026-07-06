@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="エステートパートナー（EstatePartner）のプライバシーポリシー。">
+<title>プライバシーポリシー | エステートパートナー</title>
+<style>
+  /* ============ Reset ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  a { color: inherit; }
+
+  /* ============ Design tokens: light (default) ============ */
+  :root {
+    --ink: #0B2545;
+    --paper: #F7F9FC;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F8;
+    --text: #17233C;
+    --text-muted: #51607A;
+    --border: rgba(11, 37, 69, 0.14);
+    --brass-text: #8C6720;
+    --focus: #0B2545;
+
+    --font-display: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+    --font-body: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #E7ECF6;
+      --paper: #0A1220;
+      --surface: #101B2E;
+      --surface-2: #16233A;
+      --text: #D7DFEE;
+      --text-muted: #93A2C0;
+      --border: rgba(215, 223, 238, 0.16);
+      --brass-text: #E3B564;
+      --focus: #E7ECF6;
+      color-scheme: dark;
+    }
+  }
+
+  /* 手動テーマ切替（両方向で必ず勝つ） */
+  :root[data-theme="dark"] {
+    --ink: #E7ECF6;
+    --paper: #0A1220;
+    --surface: #101B2E;
+    --surface-2: #16233A;
+    --text: #D7DFEE;
+    --text-muted: #93A2C0;
+    --border: rgba(215, 223, 238, 0.16);
+    --brass-text: #E3B564;
+    --focus: #E7ECF6;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --ink: #0B2545;
+    --paper: #F7F9FC;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F8;
+    --text: #17233C;
+    --text-muted: #51607A;
+    --border: rgba(11, 37, 69, 0.14);
+    --brass-text: #8C6720;
+    --focus: #0B2545;
+    color-scheme: light;
+  }
+
+  /* ============ Base ============ */
+  html { font-size: 16px; }
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    line-height: 1.45;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  p, li { color: var(--text); }
+
+  a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ============ Layout ============ */
+  .container {
+    max-width: 720px;
+    margin-inline: auto;
+    padding-inline: clamp(1.1rem, 4vw, 2.5rem);
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 4.5rem);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--border); }
+
+  .page-title {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    margin-bottom: 0.6rem;
+  }
+  .page-meta {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 2.5rem;
+  }
+
+  section {
+    margin-bottom: 2.2rem;
+    padding-bottom: 2.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 0.8rem;
+  }
+  section p {
+    margin-bottom: 0.9rem;
+  }
+  section p:last-child { margin-bottom: 0; }
+
+  .contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+
+  footer.page-footer {
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a class="back-link" href="index.html">&larr; EstatePartner トップへ</a>
+
+  <h1 class="page-title">EstatePartner プライバシーポリシー</h1>
+  <p class="page-meta">制定日: 2026年7月6日</p>
+
+  <section>
+    <h2>1. 基本方針</h2>
+    <p>本アプリは営業担当者個人のスマートフォン内で完結するよう設計されており、開発者がユーザーの個人情報を収集・保存・第三者提供することはありません。アカウント登録も不要です。</p>
+  </section>
+
+  <section>
+    <h2>2. 開発者が収集する情報</h2>
+    <p>ありません。アクセス解析ツール・広告SDK・クラッシュレポート送信機能は組み込んでいません。</p>
+  </section>
+
+  <section>
+    <h2>3. 端末内に保存されるデータ</h2>
+    <p>物件情報、写真・動画、各種計算・計測の履歴、設定値はすべてお使いの端末内（データベースおよびアプリ領域のファイル）に保存され、開発者のサーバーへ送信されることはありません。端末のバックアップ（iCloudバックアップ等）に含まれるかどうかはOSの設定に従います。</p>
+  </section>
+
+  <section>
+    <h2>4. 通信が発生する機能</h2>
+    <p>(1) スピード査定: ユーザー自身が取得・設定した国土交通省「不動産情報ライブラリ」のAPIキーを用いて、査定対象の地域・物件種別・期間等の検索条件を同ライブラリのAPIへ送信します。氏名・連絡先等の個人情報は送信されません。</p>
+    <p>(2) 外部リンク: 金融機関サイト等へのリンクを開く際は端末のブラウザに遷移します。遷移先での取り扱いは各サイトのポリシーに従います。</p>
+  </section>
+
+  <section>
+    <h2>5. 端末の権限</h2>
+    <p>カメラ（物件写真・動画の撮影）／ マイク（動画撮影時の録音、騒音メーターの計測。騒音メーターの録音データは保存されず、計測終了時に破棄されます）／ 位置情報（物件位置の記録、方位磁石）／ 写真ライブラリ（写真・動画の選択と保存）。</p>
+    <p>いずれも該当機能の利用時にのみ許可を求め、拒否しても他の機能は利用できます。</p>
+  </section>
+
+  <section>
+    <h2>6. 第三者への提供</h2>
+    <p>ありません。</p>
+  </section>
+
+  <section>
+    <h2>7. 本ポリシーの変更</h2>
+    <p>内容を変更する場合は本ページで告知します。</p>
+  </section>
+
+  <section>
+    <h2>8. お問い合わせ</h2>
+    <p><a href="mailto:sinjonrp@gmail.com">sinjonrp@gmail.com</a></p>
+  </section>
+
+  <footer class="page-footer">
+    <p>&copy; 2026 EstatePartner</p>
+  </footer>
+</div>
+
+</body>
+</html>

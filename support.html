@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="エステートパートナー（EstatePartner）のサポートページ。よくある質問とお問い合わせ先。">
+<title>サポート | エステートパートナー</title>
+<style>
+  /* ============ Reset ============ */
+  *, *::before, *::after { box-sizing: border-box; }
+  * { margin: 0; }
+  ul, ol { padding: 0; list-style: none; }
+  a { color: inherit; }
+  button { font: inherit; color: inherit; background: none; border: none; }
+
+  /* ============ Design tokens: light (default) ============ */
+  :root {
+    --ink: #0B2545;
+    --paper: #F7F9FC;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F8;
+    --text: #17233C;
+    --text-muted: #51607A;
+    --border: rgba(11, 37, 69, 0.14);
+    --brass-text: #8C6720;
+    --focus: #0B2545;
+
+    --font-display: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
+    --font-body: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #E7ECF6;
+      --paper: #0A1220;
+      --surface: #101B2E;
+      --surface-2: #16233A;
+      --text: #D7DFEE;
+      --text-muted: #93A2C0;
+      --border: rgba(215, 223, 238, 0.16);
+      --brass-text: #E3B564;
+      --focus: #E7ECF6;
+      color-scheme: dark;
+    }
+  }
+
+  /* 手動テーマ切替（両方向で必ず勝つ） */
+  :root[data-theme="dark"] {
+    --ink: #E7ECF6;
+    --paper: #0A1220;
+    --surface: #101B2E;
+    --surface-2: #16233A;
+    --text: #D7DFEE;
+    --text-muted: #93A2C0;
+    --border: rgba(215, 223, 238, 0.16);
+    --brass-text: #E3B564;
+    --focus: #E7ECF6;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --ink: #0B2545;
+    --paper: #F7F9FC;
+    --surface: #FFFFFF;
+    --surface-2: #EDF1F8;
+    --text: #17233C;
+    --text-muted: #51607A;
+    --border: rgba(11, 37, 69, 0.14);
+    --brass-text: #8C6720;
+    --focus: #0B2545;
+    color-scheme: light;
+  }
+
+  /* ============ Base ============ */
+  html { font-size: 16px; }
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.85;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2 {
+    font-family: var(--font-display);
+    color: var(--ink);
+    line-height: 1.45;
+    font-weight: 600;
+    text-wrap: balance;
+  }
+  p, li { color: var(--text); }
+
+  a:focus-visible,
+  summary:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  /* ============ Layout ============ */
+  .container {
+    max-width: 720px;
+    margin-inline: auto;
+    padding-inline: clamp(1.1rem, 4vw, 2.5rem);
+    padding-block: clamp(2rem, 4vw, 3.5rem) clamp(3rem, 5vw, 4.5rem);
+  }
+
+  .back-link {
+    display: inline-block;
+    margin-bottom: 2rem;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+  }
+  .back-link:hover { color: var(--ink); border-color: var(--border); }
+
+  .page-title {
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    margin-bottom: 1rem;
+  }
+  .lead {
+    color: var(--text-muted);
+    max-width: 34em;
+    margin-bottom: 2.5rem;
+  }
+
+  section {
+    margin-bottom: 2.2rem;
+    padding-bottom: 2.2rem;
+    border-bottom: 1px solid var(--border);
+  }
+  section:last-of-type {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+
+  h2 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+  }
+  section p {
+    margin-bottom: 0.9rem;
+  }
+  section p:last-child { margin-bottom: 0; }
+
+  /* ============ FAQ ============ */
+  .faq-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .faq-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 0.2rem 1.2rem;
+  }
+  .faq-item summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 1rem 0;
+    font-weight: 700;
+    color: var(--ink);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .chev {
+    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+  .faq-item[open] summary .chev { transform: rotate(180deg); }
+  .faq-item .faq-a {
+    padding-bottom: 1.1rem;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+
+  footer.page-footer {
+    margin-top: 3rem;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <a class="back-link" href="index.html">&larr; EstatePartner トップへ</a>
+
+  <h1 class="page-title">EstatePartner サポート</h1>
+  <p class="lead">不動産営業マン個人向けの現場ツールアプリです。物件管理・ローン計算・マイソクPDF・スピード査定など約20機能をスマホ1台でご利用いただけます。</p>
+
+  <section>
+    <h2>よくある質問</h2>
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>スピード査定のAPIキーはどこで取得できますか?<span class="chev">▾</span></summary>
+        <p class="faq-a">国土交通省「不動産情報ライブラリ」のサイトから無料で申請できます。取得後、アプリの「設定」タブで登録してください。APIキー未設定の間はデモデータで動作を確認できます。</p>
+      </details>
+      <details class="faq-item">
+        <summary>データはどこに保存されますか?<span class="chev">▾</span></summary>
+        <p class="faq-a">すべてお使いの端末内に保存されます。開発者のサーバーに送信されることはありません。</p>
+      </details>
+      <details class="faq-item">
+        <summary>オフラインでも使えますか?<span class="chev">▾</span></summary>
+        <p class="faq-a">スピード査定と外部リンク以外の機能はオフラインで動作します。</p>
+      </details>
+      <details class="faq-item">
+        <summary>機種変更時にデータは引き継げますか?<span class="chev">▾</span></summary>
+        <p class="faq-a">端末内保存のため、iOSの機種移行（クイックスタート/iCloudバックアップからの復元）をご利用ください。</p>
+      </details>
+    </div>
+  </section>
+
+  <section>
+    <h2>お問い合わせ</h2>
+    <p>不具合のご報告・ご要望は <a href="mailto:sinjonrp@gmail.com">sinjonrp@gmail.com</a> へ。件名に「EstatePartner」と記載してください。</p>
+  </section>
+
+  <section>
+    <h2>プライバシーポリシー</h2>
+    <p><a href="privacy.html">プライバシーポリシーはこちら</a></p>
+  </section>
+
+  <footer class="page-footer">
+    <p>&copy; 2026 EstatePartner</p>
+  </footer>
+</div>
+
+</body>
+</html>
