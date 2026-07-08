@@ -3,1051 +3,1151 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="description" content="不動産営業マン個人のための現場ツール。ローン計算・マイソクPDF・スピード査定など約20機能をスマホ1台で。iOS/Android近日公開。">
-<title>エステートパートナー | 接客のその場で完結する不動産営業アプリ</title>
+<meta name="theme-color" content="#0A1524">
+<meta name="description" content="不動産営業マン個人のための現場ツール「エステートパートナー」。ローン計算・マイソクPDF・スピード査定など24の営業ツールをスマホ1台で。登録不要・完全無料、データは端末内のみ。App Store近日公開。">
+<title>エステートパートナー | 営業の道具箱を、ポケットに。</title>
+<meta property="og:title" content="エステートパートナー | 営業の道具箱を、ポケットに。">
+<meta property="og:description" content="不動産営業マン個人のための現場ツール。ローン計算・マイソクPDF・スピード査定など24の営業ツールをスマホ1台で。登録不要・完全無料、データは端末内のみ。">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://sinjonrp.github.io/estatepartner-site/">
 <style>
   /* ============ Reset ============ */
   *, *::before, *::after { box-sizing: border-box; }
   * { margin: 0; }
   ul, ol { padding: 0; list-style: none; }
   img, svg { display: block; max-width: 100%; }
-  a { color: inherit; }
+  a { color: inherit; text-decoration: none; }
   button { font: inherit; color: inherit; background: none; border: none; }
 
-  /* ============ Design tokens: light (default) ============ */
+  /* ============ Design tokens ============ */
   :root {
-    --ink: #0B2545;         /* 見出し・強調文字（ライト時） */
-    --brand: #0B2545;       /* ブランド固定色（アプリと同一・テーマ非依存） */
-    --brand-contrast: #FFFFFF;
-    --paper: #F7F9FC;
-    --surface: #FFFFFF;
-    --surface-2: #EDF1F8;
-    --text: #17233C;
-    --text-muted: #51607A;
-    --border: rgba(11, 37, 69, 0.14);
-    --brass: #B8892D;
-    --brass-text: #8C6720;  /* 小さめの文字色として使う濃いめの真鍮色（コントラスト確保） */
-    --ok: #1E5631;
-    --shadow: rgba(11, 37, 69, 0.14);
-    --focus: #0B2545;
-
-    --font-display: "Hiragino Mincho ProN", "Yu Mincho", "YuMincho", serif;
-    --font-body: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", Meiryo, sans-serif;
-
-    color-scheme: light;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --ink: #E7ECF6;
-      --surface: #101B2E;
-      --surface-2: #16233A;
-      --paper: #0A1220;
-      --text: #D7DFEE;
-      --text-muted: #93A2C0;
-      --border: rgba(215, 223, 238, 0.16);
-      --brass: #C99A3E;
-      --brass-text: #E3B564;
-      --ok: #3FAE72;
-      --shadow: rgba(0, 0, 0, 0.5);
-      --focus: #E7ECF6;
-      color-scheme: dark;
-    }
-  }
-
-  /* 手動テーマ切替（両方向で必ず勝つ） */
-  :root[data-theme="dark"] {
-    --ink: #E7ECF6;
-    --surface: #101B2E;
-    --surface-2: #16233A;
-    --paper: #0A1220;
-    --text: #D7DFEE;
-    --text-muted: #93A2C0;
-    --border: rgba(215, 223, 238, 0.16);
-    --brass: #C99A3E;
-    --brass-text: #E3B564;
-    --ok: #3FAE72;
-    --shadow: rgba(0, 0, 0, 0.5);
-    --focus: #E7ECF6;
+    --bg: #0A1524;
+    --bg-raised: #0C1B30;
+    --bg-card: #101F36;
+    --bg-card-2: #0F2038;
+    --bg-footer: #081120;
+    --bg-store: #04070D;
+    --ac: #FF6B57;
+    --ac-rgb: 255, 107, 87;
+    --text: #EAF1FA;
+    --text-soft: #B9C8DE;
+    --text-muted: #9FB2CC;
+    --text-dim: #8FA3BF;
+    --text-dimmer: #7C90AE;
+    --text-faint: #66799A;
+    --border: rgba(151, 180, 220, 0.14);
+    --border-soft: rgba(151, 180, 220, 0.12);
+    --border-strong: rgba(151, 180, 220, 0.28);
+    --tag-border: rgba(151, 180, 220, 0.18);
+    --tag-bg: rgba(255, 255, 255, 0.03);
+    --container: 1180px;
     color-scheme: dark;
   }
-  :root[data-theme="light"] {
-    --ink: #0B2545;
-    --surface: #FFFFFF;
-    --surface-2: #EDF1F8;
-    --paper: #F7F9FC;
-    --text: #17233C;
-    --text-muted: #51607A;
-    --border: rgba(11, 37, 69, 0.14);
-    --brass: #B8892D;
-    --brass-text: #8C6720;
-    --ok: #1E5631;
-    --shadow: rgba(11, 37, 69, 0.14);
-    --focus: #0B2545;
-    color-scheme: light;
-  }
 
-  /* ============ Base ============ */
-  html { font-size: 16px; }
+  html { font-size: 16px; scroll-behavior: smooth; }
   body {
-    background: var(--paper);
+    margin: 0;
+    background: var(--bg);
     color: var(--text);
-    font-family: var(--font-body);
-    line-height: 1.85;
+    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic Medium", "Yu Gothic", Meiryo, sans-serif;
+    line-height: 1.7;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
   }
-  h1, h2, h3, h4 {
-    font-family: var(--font-display);
-    color: var(--ink);
-    line-height: 1.45;
-    font-weight: 600;
-    text-wrap: balance;
-  }
-  p { color: var(--text); }
-  .measure { max-width: 34em; }
+  h1, h2, h3, h4 { line-height: 1.35; font-weight: 800; text-wrap: balance; color: var(--text); }
+  p { color: var(--text-muted); }
+  a:hover { color: var(--ac); }
+  ::selection { background: var(--ac); color: var(--bg); }
   .num { font-variant-numeric: tabular-nums; }
 
   a:focus-visible,
   button:focus-visible,
-  summary:focus-visible {
-    outline: 2px solid var(--focus);
+  summary:focus-visible,
+  [tabindex]:focus-visible {
+    outline: 2px solid var(--ac);
     outline-offset: 3px;
-    border-radius: 2px;
+    border-radius: 3px;
   }
 
-  /* ============ Layout ============ */
-  .container {
-    max-width: 1080px;
-    margin-inline: auto;
-    padding-inline: clamp(1.1rem, 4vw, 2.5rem);
-  }
-  .section {
-    padding-block: clamp(2.75rem, 4vw + 1.2rem, 5.5rem);
-  }
-  .section--alt { background: var(--surface-2); }
-  .section-head {
-    margin-bottom: clamp(1.75rem, 3vw, 2.75rem);
-  }
-  .eyebrow {
-    display: block;
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
-    color: var(--brass-text);
-    font-weight: 700;
-    margin-bottom: 0.7em;
-  }
-  .section-title {
-    font-size: clamp(1.5rem, 1.15rem + 1.1vw, 2.1rem);
-  }
-  .section-sub {
-    margin-top: 0.9rem;
-    color: var(--text-muted);
-    max-width: 42em;
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
   }
 
   /* ============ Skip link ============ */
   .skip-link {
     position: absolute;
     left: 1rem;
-    top: -3rem;
-    background: var(--ink);
-    color: var(--brand-contrast);
-    padding: 0.6rem 1rem;
-    border-radius: 4px;
-    z-index: 100;
-    transition: none;
+    top: -3.5rem;
+    background: var(--ac);
+    color: var(--bg);
+    font-weight: 700;
+    padding: 0.7rem 1.1rem;
+    border-radius: 6px;
+    z-index: 200;
   }
-  .skip-link:focus {
-    top: 1rem;
+  .skip-link:focus { top: 1rem; }
+
+  /* ============ Layout helpers ============ */
+  .container {
+    max-width: var(--container);
+    margin-inline: auto;
+    padding-inline: clamp(1.1rem, 4vw, 3rem);
+  }
+  .section-eyebrow {
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.24em;
+    color: var(--ac);
+  }
+  .section-title {
+    margin-top: 0.9rem;
+    font-size: clamp(1.55rem, 1.1rem + 1.9vw, 2.5rem);
+    letter-spacing: 0.01em;
+  }
+  .section-sub {
+    margin-top: 0.85rem;
+    font-size: clamp(0.9rem, 0.85rem + 0.2vw, 0.95rem);
+    line-height: 1.95;
+    color: var(--text-muted);
+    max-width: 42em;
   }
 
-  /* ============ Icon sprite (hidden defs) ============ */
-  .icon-sprite { position: absolute; width: 0; height: 0; overflow: hidden; }
-  .icon {
-    width: 1.3em;
-    height: 1.3em;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 1.6;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    flex-shrink: 0;
+  /* ============ Reveal-on-scroll (progressive enhancement) ============ */
+  .reveal { opacity: 1; }
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal.js-anim {
+      opacity: 0;
+      transform: translateY(18px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.js-anim.is-visible { opacity: 1; transform: none; }
   }
 
-  /* ============ Top bar ============ */
-  .topbar {
-    padding-block: 1.1rem;
+  @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .float-anim { animation: floaty 7s ease-in-out infinite; }
+  .float-anim.d2 { animation-delay: -3.5s; animation-duration: 8s; }
+  @media (prefers-reduced-motion: reduce) {
+    .float-anim { animation: none; }
   }
-  .topbar .container {
+
+  /* ============ Header ============ */
+  .site-header {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(10, 21, 36, 0.72);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .header-inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 0.75rem 1.5rem;
+    gap: 0.6rem;
+    height: 62px;
   }
-  .brandmark {
-    display: flex;
-    align-items: baseline;
-    gap: 0.55em;
-    font-family: var(--font-display);
-    font-weight: 600;
-    font-size: 1.05rem;
-    color: var(--ink);
-    letter-spacing: 0.02em;
-  }
-  .brandmark small {
-    font-family: var(--font-body);
-    font-size: 0.68rem;
-    font-weight: 400;
-    color: var(--text-muted);
-    letter-spacing: 0.06em;
-  }
-  .toplinks {
-    display: flex;
-    gap: clamp(1rem, 3vw, 1.75rem);
-    font-size: 0.86rem;
-  }
-  .toplinks a {
-    text-decoration: none;
-    color: var(--text-muted);
-    border-bottom: 1px solid transparent;
-  }
-  .toplinks a:hover { color: var(--ink); border-color: var(--border); }
-
-  /* ============ Hero ============ */
-  .hero .container {
+  .brand { display: flex; align-items: center; gap: 0.7rem; min-width: 0; flex-shrink: 1; }
+  .brand-badge {
+    width: 32px; height: 32px;
+    border-radius: 9px;
+    background: var(--ac);
     display: grid;
-    grid-template-columns: 1fr;
-    gap: clamp(2.5rem, 5vw, 3rem);
-    align-items: center;
-    padding-block: clamp(1.5rem, 3vw, 3rem) clamp(2.5rem, 4vw, 3.5rem);
+    place-items: center;
+    flex: none;
+    color: var(--bg);
   }
-  @media (min-width: 900px) {
-    .hero .container {
-      grid-template-columns: 1.08fr 0.92fr;
-    }
-  }
-  .hero-copy .eyebrow { color: var(--brass-text); }
-  .hero-title {
-    font-size: clamp(2.1rem, 1.5rem + 2.6vw, 3.4rem);
-    margin-bottom: 1.1rem;
-  }
-  .hero-lead {
-    color: var(--text-muted);
-    font-size: 1.05rem;
-    max-width: 30em;
-    margin-bottom: 1.9rem;
-  }
-  .hero-trust {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem 1.1rem;
-    margin-bottom: 2.1rem;
-    font-size: 0.86rem;
-    color: var(--text-muted);
-  }
-  .hero-trust li { display: flex; align-items: center; gap: 0.45em; }
-  .hero-trust .icon { width: 1.05em; height: 1.05em; color: var(--ok); }
+  .brand-badge svg { width: 18px; height: 18px; }
+  .brand-name { font-size: 0.94rem; font-weight: 800; letter-spacing: 0.02em; line-height: 1.2; white-space: nowrap; }
+  .brand-sub { font-size: 0.53rem; font-weight: 600; letter-spacing: 0.22em; color: var(--text-dimmer); line-height: 1.4; white-space: nowrap; }
 
-  .cta-area {
-    display: flex;
-    flex-wrap: wrap;
+  .nav-links {
+    display: none;
     align-items: center;
-    gap: 0.9rem 1.1rem;
+    gap: 1.9rem;
   }
-  .badge-soon {
+  .nav-links a {
+    font-size: 0.84rem;
+    font-weight: 600;
+    color: var(--text-soft);
+  }
+  .header-actions { display: flex; align-items: center; gap: 1rem; flex-shrink: 0; }
+  .store-pill {
     display: inline-flex;
     align-items: center;
     gap: 0.5em;
-    border: 1px solid var(--brass);
-    color: var(--brass-text);
-    font-weight: 700;
-    font-size: 0.85rem;
-    letter-spacing: 0.04em;
+    white-space: nowrap;
+    background: var(--ac);
+    color: var(--bg);
+    font-size: 0.72rem;
+    font-weight: 800;
     padding: 0.55em 1.05em;
     border-radius: 999px;
+    letter-spacing: 0.02em;
+    cursor: not-allowed;
   }
-  .badge-soon::before {
+  .store-pill .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--bg); flex: none; }
+  .store-pill-full { display: inline; }
+  .store-pill-short { display: none; }
+
+  @media (max-width: 420px) {
+    .store-pill { font-size: 0.68rem; padding: 0.5em 0.85em; }
+    .store-pill-full { display: none; }
+    .store-pill-short { display: inline; }
+  }
+
+  @media (min-width: 880px) {
+    .nav-links { display: flex; }
+  }
+
+  /* ============ Hero ============ */
+  .hero { position: relative; overflow: hidden; }
+  .hero::before {
     content: "";
-    width: 0.5em;
-    height: 0.5em;
-    border-radius: 50%;
-    background: var(--brass);
+    position: absolute; inset: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(640px 460px at 76% 24%, rgba(var(--ac-rgb), 0.13), transparent 70%),
+      radial-gradient(720px 540px at 8% 88%, rgba(48, 110, 198, 0.13), transparent 70%);
   }
-  .cta-store-note {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-  }
-
-  .hero-fade {
-    animation: heroFade 0.8s ease-out both;
-  }
-  .hero-fade.d2 { animation-delay: 0.12s; }
-  .hero-fade.d3 { animation-delay: 0.22s; }
-  @keyframes heroFade {
-    from { opacity: 0; transform: translateY(14px); }
-    to { opacity: 1; transform: none; }
-  }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-fade { animation: none; }
-  }
-
-  /* ============ Phone mockup ============ */
-  .phone-wrap {
-    display: flex;
-    justify-content: center;
-  }
-  .phone {
-    width: min(78vw, 280px);
-    background: #050B14;
-    border-radius: 42px;
-    padding: 12px;
-    box-shadow: 0 30px 60px -20px var(--shadow), 0 2px 0 rgba(255,255,255,0.04) inset;
-  }
-  .phone-notch {
-    width: 40%;
-    height: 20px;
-    background: #050B14;
-    border-radius: 0 0 14px 14px;
-    margin: 0 auto;
+  .hero-grid {
     position: relative;
-    z-index: 2;
-  }
-  .phone-screen {
-    background: var(--surface);
-    border-radius: 30px;
-    overflow: hidden;
-    margin-top: -20px;
-    display: flex;
-    flex-direction: column;
-    min-height: 470px;
-  }
-  .phone-statusbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.6rem 1.1rem 0.2rem;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--ink);
-  }
-  .phone-statusbar .glyphs { display: flex; align-items: center; gap: 0.35em; }
-  .sig-bar { display: flex; align-items: flex-end; gap: 2px; height: 8px; }
-  .sig-bar span { width: 2.5px; background: var(--ink); display: block; border-radius: 1px; }
-  .sig-bar span:nth-child(1){ height: 40%; }
-  .sig-bar span:nth-child(2){ height: 60%; }
-  .sig-bar span:nth-child(3){ height: 80%; }
-  .sig-bar span:nth-child(4){ height: 100%; }
-  .batt { width: 18px; height: 9px; border: 1px solid var(--ink); border-radius: 2px; position: relative; padding: 1px; }
-  .batt::after { content:""; display:block; width: 78%; height: 100%; background: var(--ink); border-radius: 1px; }
-
-  .phone-appheader {
-    background: var(--brand);
-    color: var(--brand-contrast);
-    padding: 0.85rem 1.1rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-  .phone-appheader .name {
-    font-family: var(--font-display);
-    font-size: 0.95rem;
-    letter-spacing: 0.02em;
-  }
-  .phone-appheader .dot {
-    width: 22px; height: 22px;
-    border-radius: 50%;
-    border: 1.4px solid rgba(255,255,255,0.55);
-  }
-
-  .phone-body {
-    flex: 1;
-    background: var(--surface-2);
-    padding: 0.8rem 0.7rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  .phone-row {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 0.6rem 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 0.65rem;
-  }
-  .phone-row .icon-box {
-    width: 30px; height: 30px;
-    border-radius: 8px;
-    background: var(--surface-2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ink);
-  }
-  .phone-row .icon-box .icon { width: 1.05em; height: 1.05em; }
-  .phone-row .label {
-    font-size: 0.78rem;
-    color: var(--text);
-    flex: 1;
-    font-weight: 600;
-  }
-  .phone-row .chev { color: var(--text-muted); font-size: 0.8rem; }
-
-  .phone-tabbar {
-    display: flex;
-    background: var(--brand);
-    padding: 0.55rem 0.4rem 0.75rem;
-  }
-  .phone-tab {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    color: rgba(255,255,255,0.55);
-    font-size: 0.62rem;
-    letter-spacing: 0.02em;
-  }
-  .phone-tab .icon { width: 1.15em; height: 1.15em; }
-  .phone-tab.active {
-    color: var(--brand-contrast);
-  }
-  .phone-tab.active .icon-holder {
-    background: rgba(255,255,255,0.16);
-    border-radius: 8px;
-  }
-  .icon-holder { padding: 0.15rem 0.5rem; }
-
-  /* ============ Problem section ============ */
-  .problem-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-    gap: 1.25rem;
-  }
-  .problem-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 1.5rem;
-  }
-  .problem-card h3 {
-    font-family: var(--font-body);
-    font-size: 1.02rem;
-    color: var(--ink);
-    margin-bottom: 0.6rem;
-  }
-  .problem-card p {
-    color: var(--text-muted);
-    font-size: 0.92rem;
-  }
-
-  /* ============ Timeline ============ */
-  .timeline {
-    position: relative;
-    padding-left: clamp(1.5rem, 4vw, 2.5rem);
-    border-left: 2px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: clamp(1.8rem, 3vw, 2.6rem);
-  }
-  .timeline-item { position: relative; }
-  .timeline-dot {
-    position: absolute;
-    left: calc(clamp(1.5rem, 4vw, 2.5rem) * -1 - 6px);
-    top: 0.3rem;
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: var(--paper);
-    border: 2px solid var(--brass);
-  }
-  .timeline-time {
-    display: flex;
+    grid-template-columns: 1fr;
+    gap: clamp(2.5rem, 6vw, 3rem);
     align-items: center;
-    gap: 0.6rem;
-    color: var(--brass-text);
-    font-weight: 700;
-    font-size: 1.05rem;
-    margin-bottom: 0.4rem;
+    padding-block: clamp(2.5rem, 5vw, 5.5rem) clamp(3rem, 6vw, 6.5rem);
   }
-  .timeline-time .icon { color: var(--brass-text); width: 1.1em; height: 1.1em; }
-  .timeline-item h3 {
-    font-size: 1.15rem;
-    margin-bottom: 0.5rem;
+  @media (min-width: 940px) {
+    .hero-grid { grid-template-columns: 1.05fr 0.95fr; }
   }
-  .timeline-item .tools {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 0.55rem;
-  }
-  .timeline-item .scene {
-    color: var(--text);
-    max-width: 36em;
-  }
-
-  /* ============ Features grid ============ */
-  .tab-block { margin-bottom: clamp(2rem, 3vw, 2.75rem); }
-  .tab-block:last-child { margin-bottom: 0; }
-  .tab-block-head {
-    display: flex;
-    align-items: baseline;
-    gap: 0.9rem;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-  }
-  .tab-chip {
+  .hero-eyebrow {
     display: inline-flex;
     align-items: center;
-    gap: 0.4em;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    padding: 0.3em 0.85em;
-    border: 1px solid var(--border);
+    gap: 0.55rem;
+    border: 1px solid var(--border-strong);
     border-radius: 999px;
-    color: var(--ink);
+    padding: 0.45rem 0.9rem;
+    font-size: 0.75rem;
     font-weight: 700;
+    color: var(--text-soft);
+    letter-spacing: 0.03em;
   }
-  .tab-chip .icon { width: 1em; height: 1em; }
-  .tab-block-head h3 {
-    font-family: var(--font-body);
-    font-size: 0.95rem;
+  .hero-eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--ac); flex: none; }
+  .hero-title {
+    margin-top: 1.5rem;
+    font-size: clamp(2.1rem, 1.55rem + 3.3vw, 3.6rem);
+    line-height: 1.28;
+    letter-spacing: 0.01em;
+  }
+  .hero-title .ac { color: var(--ac); }
+  .hero-lead {
+    margin-top: 1.4rem;
+    font-size: clamp(0.96rem, 0.9rem + 0.3vw, 1.03rem);
+    line-height: 1.95;
     color: var(--text-muted);
-    font-weight: 400;
+    max-width: 30em;
   }
-  .subgroup-label {
-    font-size: 0.78rem;
-    letter-spacing: 0.06em;
-    color: var(--text-muted);
-    margin: 1.1rem 0 0.6rem;
-    font-weight: 700;
+  .hero-actions {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
   }
-  .subgroup-label:first-of-type { margin-top: 0; }
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-    gap: 0.9rem;
-  }
-  .feature-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.9rem 1rem;
-  }
-  .feature-card h4 {
-    font-family: var(--font-body);
-    font-size: 0.92rem;
-    color: var(--ink);
-    font-weight: 700;
-    margin-bottom: 0.35rem;
-  }
-  .feature-card p {
-    font-size: 0.82rem;
-    color: var(--text-muted);
+  .hero-note {
+    margin-top: 1.2rem;
+    font-size: 0.75rem;
+    color: var(--text-faint);
+    letter-spacing: 0.03em;
   }
 
-  /* ============ Pillars ============ */
-  .pillars-grid {
+  /* Faux App Store badge (non-interactive) */
+  .store-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: var(--bg-store);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 14px;
+    padding: 0.68rem 1.35rem 0.68rem 1.1rem;
+    box-shadow: 0 14px 34px rgba(0, 0, 0, 0.38);
+    cursor: not-allowed;
+  }
+  .store-badge .apple-icon { width: 22px; height: 26px; fill: #FFFFFF; flex: none; }
+  .store-badge-label { font-size: 0.65rem; font-weight: 700; letter-spacing: 0.1em; color: var(--text-dim); }
+  .store-badge-name { font-size: 1.1rem; font-weight: 700; color: #FFFFFF; line-height: 1.25; white-space: nowrap; }
+  .store-badge--lg { gap: 0.9rem; padding: 0.85rem 1.8rem 0.85rem 1.4rem; border-radius: 16px; }
+  .store-badge--lg .apple-icon { width: 27px; height: 32px; }
+  .store-badge--lg .store-badge-name { font-size: 1.35rem; }
+
+  .ghost-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    border: 1px solid var(--border-strong);
+    border-radius: 14px;
+    padding: 0.95rem 1.4rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    color: var(--text);
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .ghost-link:hover { border-color: var(--ac); color: var(--ac); }
+  .ghost-link svg { width: 13px; height: 13px; }
+
+  /* ============ Phone mockup ============ */
+  .hero-visual { position: relative; display: flex; justify-content: center; }
+  .hero-visual::before {
+    content: "";
+    position: absolute;
+    inset: -30px -10px;
+    pointer-events: none;
+    background: radial-gradient(340px 420px at 50% 45%, rgba(var(--ac-rgb), 0.16), transparent 72%);
+  }
+  .phone {
+    position: relative;
+    width: min(72vw, 300px);
+    background: #0B1424;
+    border: 1px solid #2C3E5C;
+    border-radius: 44px;
+    padding: 9px;
+    box-shadow: 0 44px 90px rgba(3, 10, 22, 0.62);
+  }
+  .phone-screen {
+    position: relative;
+    aspect-ratio: 300 / 598;
+    background: #0C1930;
+    border-radius: 35px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .phone-notch {
+    position: absolute;
+    top: 8px; left: 50%;
+    transform: translateX(-50%);
+    width: 29%; height: 22px;
+    border-radius: 13px;
+    background: #04080F;
+    z-index: 5;
+  }
+  .phone-statusbar {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0.85rem 1.3rem 0; flex: none;
+    font-size: 0.7rem; font-weight: 700;
+  }
+  .phone-statusbar .glyphs { display: flex; align-items: center; gap: 0.35rem; }
+  .sig-bars { display: flex; align-items: flex-end; gap: 1.5px; }
+  .sig-bars span { width: 3px; background: rgba(255,255,255,0.92); border-radius: 1px; display: block; }
+  .sig-bars span:nth-child(1) { height: 4px; }
+  .sig-bars span:nth-child(2) { height: 6px; }
+  .sig-bars span:nth-child(3) { height: 8px; }
+  .sig-bars span:nth-child(4) { height: 10px; }
+  .batt { position: relative; width: 20px; height: 10px; border: 1px solid rgba(255,255,255,0.5); border-radius: 3px; }
+  .batt::after { content: ""; position: absolute; inset: 2px 6px 2px 2px; background: rgba(255,255,255,0.92); border-radius: 1px; }
+
+  .phone-appbar { display: flex; align-items: center; gap: 0.5rem; padding: 1rem 1rem 0; flex: none; }
+  .phone-appbar .mark {
+    width: 20px; height: 20px; border-radius: 6px; background: var(--ac);
+    display: grid; place-items: center; flex: none; color: var(--bg);
+  }
+  .phone-appbar .mark svg { width: 11px; height: 11px; }
+  .phone-appbar .name { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.02em; }
+
+  .phone-schedule {
+    margin: 0.7rem 0.9rem 0;
+    background: var(--bg-card-2);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 13px;
+    padding: 0.7rem 0.8rem;
+    flex: none;
+  }
+  .phone-schedule-top { display: flex; align-items: center; justify-content: space-between; }
+  .phone-schedule-label { font-size: 0.58rem; font-weight: 700; color: var(--text-dimmer); letter-spacing: 0.06em; }
+  .phone-schedule-tag {
+    font-size: 0.53rem; font-weight: 800; color: var(--ac);
+    border: 1px solid rgba(var(--ac-rgb), 0.45); border-radius: 999px; padding: 0.12rem 0.5rem;
+  }
+  .phone-schedule-body { display: flex; align-items: baseline; gap: 0.55rem; margin-top: 0.4rem; }
+  .phone-schedule-time { font-size: 1rem; font-weight: 800; color: var(--ac); }
+  .phone-schedule-title { font-size: 0.68rem; font-weight: 700; }
+  .phone-schedule-sub { font-size: 0.58rem; color: var(--text-dimmer); margin-top: 0.1rem; }
+
+  .phone-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 0.5rem; margin: 0.7rem 0.9rem 0; flex: none;
+  }
+  .phone-tile {
+    background: var(--bg-card-2); border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px; padding: 0.65rem;
+  }
+  .phone-tile svg { width: 19px; height: 19px; color: var(--ac); }
+  .phone-tile span { display: block; font-size: 0.62rem; font-weight: 700; margin-top: 0.35rem; }
+
+  .phone-tabbar {
+    margin-top: auto; flex: none;
+    display: flex; justify-content: space-around; align-items: center;
+    border-top: 1px solid rgba(255,255,255,0.06);
+    padding: 0.55rem 0.5rem 0.2rem;
+  }
+  .phone-tab { text-align: center; color: #5E7397; }
+  .phone-tab.active { color: var(--ac); }
+  .phone-tab svg { width: 15px; height: 15px; margin: 0 auto; }
+  .phone-tab span { display: block; font-size: 0.44rem; font-weight: 700; margin-top: 0.1rem; }
+  .phone-homebar { display: flex; justify-content: center; padding: 0.2rem 0 0.4rem; }
+  .phone-homebar span { width: 30%; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.25); }
+
+  .float-card {
+    position: absolute;
+    background: rgba(13, 26, 46, 0.92);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 15px;
+    box-shadow: 0 20px 44px rgba(0,0,0,0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+  .float-card--stat {
+    right: clamp(-8px, -2vw, 4px);
+    top: 15%;
+    width: min(46vw, 165px);
+    padding: 0.75rem 0.85rem;
+  }
+  .float-card--stat .row { display: flex; align-items: center; gap: 0.4rem; }
+  .float-card--stat .row svg { width: 12px; height: 12px; color: var(--ac); }
+  .float-card--stat .row span { font-size: 0.62rem; font-weight: 700; color: var(--text-muted); letter-spacing: 0.04em; }
+  .float-card--stat .price { font-size: 1.1rem; font-weight: 800; margin-top: 0.35rem; }
+  .float-card--stat .price small { font-size: 0.65rem; font-weight: 700; color: var(--text-muted); }
+  .float-card--stat .note { font-size: 0.56rem; color: var(--text-faint); margin-top: 0.2rem; }
+
+  .float-card--compass {
+    left: clamp(-8px, -2vw, 2px);
+    bottom: 20%;
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.6rem 0.85rem;
+  }
+  .compass-dial {
+    position: relative; width: 34px; height: 34px; flex: none;
+    border-radius: 50%; border: 1px solid rgba(151,180,220,0.3);
+    display: grid; place-items: center;
+  }
+  .compass-dial .n { position: absolute; top: 2px; font-size: 0.4rem; font-weight: 800; color: var(--text-dimmer); }
+  .compass-dial svg { width: 15px; height: 15px; transform: rotate(150deg); }
+  .float-card--compass .label { font-size: 0.6rem; font-weight: 700; color: var(--text-muted); }
+  .float-card--compass .value { font-size: 0.72rem; font-weight: 800; margin-top: 0.1rem; }
+
+  @media (max-width: 420px) {
+    .float-card--stat { width: 42vw; padding: 0.6rem 0.65rem; right: 0; }
+    .float-card--compass { padding: 0.5rem 0.65rem; left: 0; }
+  }
+
+  /* ============ Stats band ============ */
+  .stats-band {
+    background: var(--bg-raised);
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    gap: 1.4rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .pillar-card {
-    background: var(--surface);
+  @media (min-width: 700px) {
+    .stats-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  }
+  .stat-item {
+    min-width: 0;
+    padding: clamp(1.3rem, 3vw, 2.1rem) 0.5rem;
+    text-align: center;
+    border-left: 1px solid var(--border-soft);
+  }
+  .stat-item:nth-child(1),
+  .stat-item:nth-child(2) { border-top: 1px solid var(--border-soft); }
+  @media (min-width: 700px) {
+    .stat-item:nth-child(2) { border-top: none; }
+    .stat-item:nth-child(1) { border-left: none; border-top: none; }
+  }
+  @media (max-width: 699px) {
+    .stat-item:nth-child(odd) { border-left: none; }
+  }
+  .stat-value {
+    font-size: clamp(1.15rem, 0.8rem + 1.6vw, 2.1rem);
+    font-weight: 800;
+    letter-spacing: 0.01em;
+  }
+  @media (min-width: 700px) {
+    .stat-value { white-space: nowrap; }
+  }
+  .stat-value .ac { color: var(--ac); font-size: 0.72em; }
+  .stat-label {
+    margin-top: 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dim);
+  }
+
+  /* ============ Feature cards ============ */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+    margin-top: 2.6rem;
+  }
+  @media (min-width: 640px) {
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+  @media (min-width: 1024px) {
+    .feature-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  .feature-card {
+    position: relative;
+    background: var(--bg-card);
     border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.8rem;
+    border-radius: 18px;
+    padding: 1.6rem 1.5rem;
+    transition: transform 0.25s, border-color 0.25s;
   }
-  .pillar-icon {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    background: var(--surface-2);
-    display: flex; align-items: center; justify-content: center;
-    color: var(--ink);
-    margin-bottom: 1.1rem;
+  @media (hover: hover) {
+    .feature-card:hover { transform: translateY(-4px); border-color: rgba(var(--ac-rgb), 0.45); }
   }
-  .pillar-icon .icon { width: 1.4em; height: 1.4em; }
-  .pillar-card h3 { font-size: 1.15rem; margin-bottom: 0.6rem; }
-  .pillar-card p { color: var(--text-muted); font-size: 0.92rem; }
+  .feature-index {
+    position: absolute; top: 1.4rem; right: 1.4rem;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 0.72rem; font-weight: 700; color: #4A5F80;
+  }
+  .feature-icon {
+    width: 46px; height: 46px; border-radius: 13px;
+    background: rgba(var(--ac-rgb), 0.12);
+    border: 1px solid rgba(var(--ac-rgb), 0.26);
+    display: grid; place-items: center; color: var(--ac);
+  }
+  .feature-icon svg { width: 24px; height: 24px; }
+  .feature-card h3 { margin-top: 1.05rem; font-size: 1.05rem; }
+  .feature-card p { margin-top: 0.5rem; font-size: 0.85rem; line-height: 1.9; }
+  .tag-row { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-top: 0.95rem; }
+  .tag-row span {
+    font-size: 0.72rem; font-weight: 600; color: var(--text-soft);
+    border: 1px solid var(--tag-border); background: var(--tag-bg);
+    border-radius: 999px; padding: 0.32rem 0.7rem;
+  }
+
+  /* ============ Trust ============ */
+  .trust-panel {
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(180deg, #0D1E37, #0A1729);
+    border: 1px solid var(--border);
+    border-radius: 26px;
+    padding: clamp(2.4rem, 6vw, 4.5rem) clamp(1.4rem, 5vw, 4rem);
+  }
+  .trust-panel::before {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(560px 320px at 50% 0%, rgba(var(--ac-rgb), 0.08), transparent 70%);
+  }
+  .trust-head { position: relative; text-align: center; }
+  .trust-head h2 { margin-top: 1rem; font-size: clamp(1.4rem, 1.05rem + 1.5vw, 2.35rem); line-height: 1.5; }
+  .trust-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    margin-top: clamp(2rem, 5vw, 3.75rem);
+  }
+  @media (min-width: 760px) {
+    .trust-grid { grid-template-columns: repeat(3, 1fr); gap: 2.75rem; }
+  }
+  .trust-item { text-align: center; }
+  .trust-icon {
+    width: 60px; height: 60px; margin-inline: auto;
+    border-radius: 18px; background: rgba(var(--ac-rgb), 0.12);
+    border: 1px solid rgba(var(--ac-rgb), 0.26);
+    display: grid; place-items: center; color: var(--ac);
+  }
+  .trust-icon svg { width: 28px; height: 28px; }
+  .trust-item h3 { margin-top: 1.3rem; font-size: 1.15rem; }
+  .trust-item p { margin-top: 0.7rem; font-size: 0.88rem; line-height: 1.95; }
 
   /* ============ Pricing ============ */
   .pricing-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.4rem;
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    max-width: 880px;
+    margin: clamp(2rem, 5vw, 3.25rem) auto 0;
     align-items: stretch;
   }
+  @media (min-width: 760px) {
+    .pricing-grid { grid-template-columns: 1fr 1fr; }
+  }
   .price-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 1.9rem;
-    display: flex;
-    flex-direction: column;
+    background: var(--bg-card);
+    border: 1px solid rgba(var(--ac-rgb), 0.4);
+    border-radius: 22px;
+    padding: clamp(1.6rem, 4vw, 2.2rem);
+    box-shadow: 0 24px 60px rgba(3,10,22,0.4);
   }
-  .price-card--premium {
-    border: 2px solid var(--ink);
+  .price-card--future {
+    background: transparent;
+    border: 1px dashed var(--border-strong);
+    box-shadow: none;
   }
-  .price-plan {
-    font-size: 1.05rem;
-    color: var(--text-muted);
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    margin-bottom: 0.9rem;
+  .price-flag {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    background: rgba(var(--ac-rgb), 0.14); color: var(--ac);
+    font-size: 0.72rem; font-weight: 800; letter-spacing: 0.04em;
+    border-radius: 999px; padding: 0.4rem 0.85rem;
   }
-  .price-amount {
-    font-family: var(--font-display);
-    font-size: 2.1rem;
-    color: var(--ink);
-    margin-bottom: 0.3rem;
-  }
-  .price-amount .unit { font-size: 0.95rem; color: var(--text-muted); font-family: var(--font-body); }
-  .price-sub { font-size: 0.82rem; color: var(--text-muted); margin-bottom: 1.4rem; }
-  .price-desc { color: var(--text); font-size: 0.92rem; margin-top: auto; }
-  .price-note {
-    margin-top: 1.4rem;
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
+  .price-flag .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--ac); }
+  .price-flag--future { background: transparent; border: 1px solid var(--border-strong); color: var(--text-soft); }
+  .price-card h3 { margin-top: 1.3rem; font-size: 1.15rem; }
+  .price-card--future h3 { color: #C6D3E6; }
+  .price-amount { display: flex; align-items: baseline; gap: 0.4rem; margin-top: 0.6rem; }
+  .price-amount .num { font-size: clamp(2.2rem, 1.7rem + 2vw, 3.1rem); font-weight: 800; letter-spacing: 0.01em; }
+  .price-card--future .price-amount .num { color: #C6D3E6; }
+  .price-amount .unit { font-size: 0.8rem; font-weight: 700; color: var(--text-dim); }
+  .price-rule { height: 1px; background: var(--border); margin: 1.5rem 0; }
+  .price-list { display: flex; flex-direction: column; gap: 0.85rem; }
+  .price-list li { display: flex; align-items: center; gap: 0.65rem; font-size: 0.88rem; font-weight: 600; color: var(--text); }
+  .price-list svg { width: 16px; height: 16px; color: var(--ac); flex: none; }
+  .price-card--future p { font-size: 0.88rem; line-height: 2; color: var(--text-dim); }
+  .pricing-footnote { margin-top: 1.4rem; font-size: 0.78rem; color: var(--text-faint); text-align: center; }
 
   /* ============ FAQ ============ */
-  .faq-list { display: flex; flex-direction: column; gap: 0.7rem; }
+  .faq-wrap { max-width: 780px; margin-inline: auto; }
+  .faq-list { margin-top: 1.5rem; border-bottom: 1px solid var(--border); }
   .faq-item {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 0.2rem 1.2rem;
+    border-top: 1px solid var(--border);
   }
   .faq-item summary {
-    cursor: pointer;
     list-style: none;
-    padding: 1rem 0;
-    font-weight: 700;
-    color: var(--ink);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: space-between;
     gap: 1rem;
+    padding: 1.15rem 0.2rem;
+    font-size: 0.96rem; font-weight: 700;
   }
   .faq-item summary::-webkit-details-marker { display: none; }
-  .faq-item summary .chev {
-    flex-shrink: 0;
-    color: var(--text-muted);
-    font-size: 0.8rem;
+  .faq-item summary:hover { background: rgba(255,255,255,0.02); }
+  .faq-icon {
+    flex: none; width: 26px; height: 26px;
+    border-radius: 50%; border: 1px solid var(--border-strong);
+    display: grid; place-items: center; color: var(--ac);
+    transition: transform 0.3s;
   }
-  .faq-item[open] summary .chev { transform: rotate(180deg); }
-  .faq-item .faq-a {
-    padding-bottom: 1.1rem;
-    color: var(--text-muted);
-    font-size: 0.92rem;
-    max-width: 40em;
+  .faq-icon svg { width: 11px; height: 11px; }
+  .faq-item[open] .faq-icon { transform: rotate(45deg); }
+  .faq-answer { padding: 0 2.2rem 1.3rem 0.2rem; font-size: 0.88rem; line-height: 1.95; color: var(--text-muted); }
+
+  /* ============ Final CTA ============ */
+  .cta-section { position: relative; overflow: hidden; }
+  .cta-section::before {
+    content: "";
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(620px 380px at 50% 100%, rgba(var(--ac-rgb), 0.13), transparent 72%);
   }
+  .cta-inner {
+    position: relative;
+    max-width: 780px;
+    margin-inline: auto;
+    padding-block: clamp(3.2rem, 8vw, 7.2rem);
+    text-align: center;
+  }
+  .cta-inner h2 { font-size: clamp(1.7rem, 1.2rem + 2.3vw, 2.7rem); line-height: 1.4; }
+  .cta-inner p { margin-top: 1.1rem; font-size: 0.95rem; line-height: 1.95; }
+  .cta-store { display: flex; justify-content: center; margin-top: 2rem; }
+  .cta-note { margin-top: 1.3rem; font-size: 0.75rem; color: var(--text-faint); letter-spacing: 0.03em; }
 
   /* ============ Footer ============ */
-  .site-footer {
-    background: var(--brand);
-    color: rgba(255,255,255,0.86);
-    padding-block: clamp(2.5rem, 4vw, 3.5rem) 2rem;
+  .site-footer { background: var(--bg-footer); border-top: 1px solid var(--border-soft); }
+  .footer-top {
+    padding-block: clamp(2rem, 4vw, 3.25rem) 1.5rem;
+    display: flex; justify-content: space-between; align-items: flex-start;
+    gap: 1.5rem; flex-wrap: wrap;
   }
-  .site-footer .concept {
-    font-family: var(--font-display);
-    font-size: 1.2rem;
-    color: #fff;
-    max-width: 24em;
-    margin-bottom: 0.9rem;
+  .footer-brand-row { display: flex; align-items: center; gap: 0.7rem; }
+  .footer-brand-row .brand-badge { width: 30px; height: 30px; }
+  .footer-brand-row .brand-badge svg { width: 17px; height: 17px; }
+  .footer-tagline { margin-top: 0.85rem; font-size: 0.82rem; line-height: 1.9; color: var(--text-dim); max-width: 26em; }
+  .footer-links { display: flex; gap: 1.6rem; flex-wrap: wrap; }
+  .footer-links a { font-size: 0.82rem; font-weight: 600; color: var(--text-soft); }
+  .footer-bottom {
+    margin-top: 1rem; padding-top: 1.4rem;
+    border-top: 1px solid rgba(151,180,220,0.1);
+    display: flex; justify-content: space-between; align-items: flex-end;
+    gap: 1.2rem; flex-wrap: wrap;
   }
-  .site-footer .soon {
-    font-size: 0.92rem;
-    color: rgba(255,255,255,0.75);
-    margin-bottom: 1.8rem;
-  }
-  .footer-rule {
-    border-top: 1px solid rgba(255,255,255,0.18);
-    padding-top: 1.4rem;
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-  }
-  .disclaimer {
-    font-size: 0.76rem;
-    color: rgba(255,255,255,0.55);
-    max-width: 42em;
-  }
-  .copyright {
-    font-size: 0.76rem;
-    color: rgba(255,255,255,0.55);
-  }
-  .footer-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.4rem 1rem;
-    font-size: 0.76rem;
-  }
-  .footer-links a {
-    color: rgba(255,255,255,0.7);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-  .footer-links a:hover { color: #fff; }
+  .footer-disclaimers { display: flex; flex-direction: column; gap: 0.35rem; max-width: 46em; }
+  .footer-disclaimers p { font-size: 0.72rem; line-height: 1.8; color: var(--text-faint); }
+  .footer-copyright { font-size: 0.75rem; color: var(--text-faint); flex: none; }
 </style>
 </head>
 <body>
 
 <a class="skip-link" href="#main">メインコンテンツへスキップ</a>
 
-<svg class="icon-sprite" aria-hidden="true">
+<svg class="icon-sprite" aria-hidden="true" style="position:absolute;width:0;height:0;overflow:hidden;">
   <defs>
-    <symbol id="i-house" viewBox="0 0 24 24"><path d="M4 11.5 12 4l8 7.5M6 10.3V20h5v-5h2v5h5v-9.7"/></symbol>
-    <symbol id="i-tool" viewBox="0 0 24 24"><path d="M14.7 6.3a3.8 3.8 0 0 1-5 5L4.3 16.7l3 3L12.7 15a3.8 3.8 0 0 1 5-5l-2.5 2.5-2-2z"/></symbol>
-    <symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 16a8 8 0 1 1 16 0"/><path d="M12 16 15.3 10.7"/><circle cx="12" cy="16" r="1.1"/></symbol>
-    <symbol id="i-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v2.4M12 18.6V21M4.5 7.5l2 1.2M17.5 15.3l2 1.2M3 12h2.4M18.6 12H21M4.5 16.5l2-1.2M17.5 8.7l2-1.2M8 4.5l1.2 2M14.8 17.5l1.2 2M8 19.5l1.2-2M14.8 6.5l1.2-2"/></symbol>
-    <symbol id="i-yen" viewBox="0 0 24 24"><path d="M7 4l5 7 5-7M12 11v9M8.3 13.6h7.4M8.3 16.6h7.4"/></symbol>
-    <symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M15.2 8.8l-2 5.2-5.2 2 2-5.2z"/></symbol>
-    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M9.3 12h5.4M9.3 15h5.4M9.3 9h2.2"/></symbol>
-    <symbol id="i-check" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="1.6"/><path d="M8 12.6l2.3 2.3L16 9.4"/></symbol>
-    <symbol id="i-device" viewBox="0 0 24 24"><rect x="7" y="3" width="10" height="18" rx="1.7"/><path d="M11 18h2"/></symbol>
-    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="9" rx="1.6"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></symbol>
-    <symbol id="i-offline" viewBox="0 0 24 24"><path d="M3 3l18 18"/><path d="M8.6 12.2a7 7 0 0 1 7.5-1.5M5.4 9a11 11 0 0 1 4-2.2M10.7 16.3a1.85 1.85 0 1 0 2.6 2.6"/></symbol>
+    <symbol id="i-logo" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="8" width="18" height="11" rx="2"></rect>
+      <path d="M9 8V6.5A2.5 2.5 0 0 1 11.5 4h1A2.5 2.5 0 0 1 15 6.5V8"></path>
+      <path d="M3 13h7m4 0h7"></path>
+    </symbol>
+    <symbol id="i-apple" viewBox="0 0 384 512">
+      <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"></path>
+    </symbol>
+    <symbol id="i-arrow-down" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 4v16m0 0l-6-6m6 6l6-6"></path>
+    </symbol>
+    <symbol id="i-house" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 21h18"></path>
+      <path d="M5 21V5.5A1.5 1.5 0 0 1 6.5 4h6A1.5 1.5 0 0 1 14 5.5V21"></path>
+      <path d="M14 9h3.5A1.5 1.5 0 0 1 19 10.5V21"></path>
+      <path d="M8 8h3M8 12h3M8 16h3"></path>
+    </symbol>
+    <symbol id="i-home-roof" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M3 10.5L12 3l9 7.5"></path>
+      <path d="M5 9.5V21h14V9.5"></path>
+    </symbol>
+    <symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="9" cy="7.5" r="3.5"></circle>
+      <path d="M3 21c0-3.3 2.7-6 6-6 1.2 0 2.4.4 3.3 1"></path>
+      <rect x="14" y="14" width="7" height="7" rx="1.5"></rect>
+      <path d="M14 17.2h7"></path>
+    </symbol>
+    <symbol id="i-users-simple" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="8" r="3.5"></circle>
+      <path d="M5 20c0-3.9 3.1-7 7-7s7 3.1 7 7"></path>
+    </symbol>
+    <symbol id="i-calc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+      <path d="M9 7.5h6"></path>
+      <path d="M9 12h.01M12 12h.01M15 12h.01M9 15.5h.01M12 15.5h.01M15 15.5h.01"></path>
+    </symbol>
+    <symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="9"></circle>
+      <path d="M15.6 8.4l-2.3 5-5 2.3 2.3-5z" fill="currentColor" stroke="none"></path>
+    </symbol>
+    <symbol id="i-doc-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path>
+      <path d="M14 3v5h5"></path>
+      <path d="M9 14.5l2 2 4-4.5"></path>
+    </symbol>
+    <symbol id="i-search-arc" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4 17a9 9 0 1 1 16 0"></path>
+      <path d="M12 17l4.4-5.4"></path>
+    </symbol>
+    <symbol id="i-dots" viewBox="0 0 24 24" fill="currentColor">
+      <circle cx="5" cy="12" r="1"></circle><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle>
+    </symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M13 2L4.5 13.5H11L9.5 22 19 10h-7z"></path>
+    </symbol>
+    <symbol id="i-lock-device" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="7" y="2.5" width="10" height="19" rx="2.5"></rect>
+      <path d="M10.8 5h2.4"></path>
+      <rect x="9.5" y="10.5" width="5" height="4.4" rx="1"></rect>
+      <path d="M10.5 10.5V9.3a1.5 1.5 0 0 1 3 0v1.2"></path>
+    </symbol>
+    <symbol id="i-wifi-slash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 8.6C4.8 6 8.2 4.6 12 4.6c3.8 0 7.2 1.4 10 4"></path>
+      <path d="M5.5 12.4a9.4 9.4 0 0 1 6.5-2.6c2.5 0 4.8 1 6.5 2.6"></path>
+      <path d="M9 16.1a4.7 4.7 0 0 1 3-1.1c1.1 0 2.2.4 3 1.1"></path>
+      <path d="M12 19.6h.01"></path>
+      <path d="M4 3.5l16 17"></path>
+    </symbol>
+    <symbol id="i-user-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="10" cy="7.5" r="3.5"></circle>
+      <path d="M3.5 20c0-3.6 2.9-6.5 6.5-6.5 1.6 0 3.1.6 4.2 1.5"></path>
+      <path d="M14.5 18.2l1.9 1.9 3.6-3.9"></path>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M4.5 12.5l5 5 10-11"></path>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round">
+      <path d="M6 1v10M1 6h10"></path>
+    </symbol>
+    <symbol id="i-compass-needle" viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 3l3.2 9.2L12 21l-3.2-8.8z"></path>
+    </symbol>
   </defs>
 </svg>
 
-<header class="topbar">
-  <div class="container">
-    <div class="brandmark">エステートパートナー<small>EstatePartner</small></div>
-    <nav class="toplinks" aria-label="ページ内メニュー">
-      <a href="#features">全機能一覧</a>
-      <a href="#pricing">価格</a>
-      <a href="#faq">よくある質問</a>
+<header class="site-header">
+  <div class="container header-inner">
+    <div class="brand">
+      <span class="brand-badge"><svg aria-hidden="true"><use href="#i-logo"></use></svg></span>
+      <span>
+        <span class="brand-name">エステートパートナー</span>
+        <span class="brand-sub" style="display:block;">ESTATE PARTNER</span>
+      </span>
+    </div>
+    <nav class="nav-links" aria-label="ページ内メニュー">
+      <a href="#features">機能</a>
+      <a href="#trust">安心の設計</a>
+      <a href="#pricing">料金</a>
+      <a href="#faq">FAQ</a>
     </nav>
+    <div class="header-actions">
+      <span class="store-pill" role="button" aria-disabled="true" tabindex="-1">
+        <span class="dot"></span><span class="store-pill-full">App Store 近日公開</span><span class="store-pill-short">近日公開</span>
+      </span>
+    </div>
   </div>
 </header>
 
 <main id="main">
 
-  <!-- 1. ヒーロー -->
+  <!-- ヒーロー -->
   <section class="hero">
-    <div class="container">
-      <div class="hero-copy">
-        <span class="eyebrow hero-fade">不動産営業の現場ツール／iOS・Android 近日公開</span>
-        <h1 class="hero-title hero-fade d2">接客の、その場で完結。</h1>
-        <p class="hero-lead hero-fade d2">
-          商談の最中も、現地の内見でも、資料作成の夜も。
-          営業マン個人が、自分のスマホ1台で、接客のその場で完結させるためのアプリです。
-        </p>
-        <ul class="hero-trust hero-fade d3">
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>会社契約・アカウント発行不要</li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>データは端末内保存・クラウド送信なし</li>
-          <li><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg>オフライン優先</li>
-        </ul>
-        <div class="cta-area hero-fade d3">
-          <span class="badge-soon">近日公開</span>
-          <span class="cta-store-note">App Store / Google Play にて公開予定</span>
+    <div class="container hero-grid">
+      <div>
+        <span class="hero-eyebrow"><span class="dot"></span>不動産営業マンのための、個人向けiOSアプリ</span>
+        <h1 class="hero-title">営業の道具箱を、<br><span class="ac">ポケットに。</span></h1>
+        <p class="hero-lead">物件案内もローン相談も、接客のその場で完結。登録不要・完全無料で始められる、24の営業ツール。データはすべて端末の中に保存され、外部には送信されません。</p>
+        <div class="hero-actions">
+          <span class="store-badge" role="button" aria-disabled="true" tabindex="-1">
+            <svg class="apple-icon" aria-hidden="true"><use href="#i-apple"></use></svg>
+            <span>
+              <span class="store-badge-label" style="display:block;">近日公開</span>
+              <span class="store-badge-name">App Store</span>
+            </span>
+          </span>
+          <a class="ghost-link" href="#features">機能を見る<svg aria-hidden="true"><use href="#i-arrow-down"></use></svg></a>
         </div>
+        <p class="hero-note">登録不要 ・ 完全無料で開始 ・ iOS向け</p>
       </div>
 
-      <div class="phone-wrap hero-fade d3">
-        <div class="phone" role="img" aria-label="エステートパートナーのアプリ画面イメージ。ツールタブに、ローンシミュレーション・資金計画・家賃から買える価格・方位磁石・スピード査定などのメニューが並ぶ。下部タブは物件・ツール・査定・設定。">
-          <div class="phone-notch"></div>
+      <div class="hero-visual">
+        <div class="phone" role="img" aria-label="エステートパートナーのホーム画面イメージ。今日の予定と、物件管理・顧客管理・お金の計算・現地調査・商談契約・スピード査定の6つのメニューが並ぶ。下部タブは、ホーム・物件・顧客・計算・その他。">
           <div class="phone-screen">
+            <div class="phone-notch"></div>
             <div class="phone-statusbar">
               <span class="num">9:41</span>
               <span class="glyphs">
-                <span class="sig-bar"><span></span><span></span><span></span><span></span></span>
+                <span class="sig-bars"><span></span><span></span><span></span><span></span></span>
                 <span class="batt"></span>
               </span>
             </div>
-            <div class="phone-appheader">
+            <div class="phone-appbar">
+              <span class="mark"><svg aria-hidden="true"><use href="#i-logo"></use></svg></span>
               <span class="name">エステートパートナー</span>
-              <span class="dot"></span>
             </div>
-            <div class="phone-body">
-              <div class="phone-row">
-                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-yen"></use></svg></span>
-                <span class="label">ローンシミュレーション</span>
-                <span class="chev">›</span>
+            <div class="phone-schedule">
+              <div class="phone-schedule-top">
+                <span class="phone-schedule-label">今日の予定</span>
+                <span class="phone-schedule-tag">内覧</span>
               </div>
-              <div class="phone-row">
-                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg></span>
-                <span class="label">資金計画・諸費用概算</span>
-                <span class="chev">›</span>
+              <div class="phone-schedule-body">
+                <span class="phone-schedule-time">14:00</span>
+                <span>
+                  <span class="phone-schedule-title" style="display:block;">佐藤様・物件のご案内</span>
+                  <span class="phone-schedule-sub">グランメゾン中野 302</span>
+                </span>
               </div>
-              <div class="phone-row">
-                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-house"></use></svg></span>
-                <span class="label">家賃から買える価格</span>
-                <span class="chev">›</span>
-              </div>
-              <div class="phone-row">
-                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-compass"></use></svg></span>
-                <span class="label">方位磁石</span>
-                <span class="chev">›</span>
-              </div>
-              <div class="phone-row">
-                <span class="icon-box"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg></span>
-                <span class="label">スピード査定</span>
-                <span class="chev">›</span>
-              </div>
+            </div>
+            <div class="phone-grid">
+              <div class="phone-tile"><svg aria-hidden="true"><use href="#i-house"></use></svg><span>物件管理</span></div>
+              <div class="phone-tile"><svg aria-hidden="true"><use href="#i-users"></use></svg><span>顧客管理</span></div>
+              <div class="phone-tile"><svg aria-hidden="true"><use href="#i-calc"></use></svg><span>お金の計算</span></div>
+              <div class="phone-tile"><svg aria-hidden="true"><use href="#i-target"></use></svg><span>現地調査</span></div>
+              <div class="phone-tile"><svg aria-hidden="true"><use href="#i-doc-check"></use></svg><span>商談・契約</span></div>
+              <div class="phone-tile"><svg aria-hidden="true"><use href="#i-search-arc"></use></svg><span>スピード査定</span></div>
             </div>
             <div class="phone-tabbar">
-              <span class="phone-tab"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-house"></use></svg></span>物件</span>
-              <span class="phone-tab active"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-tool"></use></svg></span>ツール</span>
-              <span class="phone-tab"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg></span>査定</span>
-              <span class="phone-tab"><span class="icon-holder"><svg class="icon" aria-hidden="true"><use href="#i-gear"></use></svg></span>設定</span>
+              <div class="phone-tab active"><svg aria-hidden="true"><use href="#i-home-roof"></use></svg><span>ホーム</span></div>
+              <div class="phone-tab"><svg aria-hidden="true"><use href="#i-house"></use></svg><span>物件</span></div>
+              <div class="phone-tab"><svg aria-hidden="true"><use href="#i-users-simple"></use></svg><span>顧客</span></div>
+              <div class="phone-tab"><svg aria-hidden="true"><use href="#i-calc"></use></svg><span>計算</span></div>
+              <div class="phone-tab"><svg aria-hidden="true"><use href="#i-dots"></use></svg><span>その他</span></div>
             </div>
+            <div class="phone-homebar"><span></span></div>
+          </div>
+        </div>
+
+        <div class="float-card float-card--stat float-anim">
+          <div class="row"><svg aria-hidden="true"><use href="#i-bolt"></use></svg><span>スピード査定</span></div>
+          <div class="price">3,980<small>万円</small></div>
+          <div class="note">国交省公開データの参考価格</div>
+        </div>
+        <div class="float-card float-card--compass float-anim d2">
+          <div class="compass-dial">
+            <span class="n">N</span>
+            <svg aria-hidden="true"><use href="#i-compass-needle"></use></svg>
+          </div>
+          <div>
+            <div class="label">方位磁石</div>
+            <div class="value">南南東 158°</div>
           </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. 課題 -->
-  <section class="section section--alt" id="problem">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">会社のシステムは、現場まで来てくれない。</h2>
-        <p class="section-sub">商談中、現地、そして事務所に戻ってからも――営業マン個人が抱える不便は、いつも「その場」で起きています。</p>
+  <!-- 数字バンド -->
+  <section class="stats-band">
+    <div class="container stats-grid">
+      <div class="stat-item">
+        <div class="stat-value">24</div>
+        <div class="stat-label">収録している機能</div>
       </div>
-      <div class="problem-grid">
-        <article class="problem-card">
-          <h3>商談中に即答できない</h3>
-          <p class="measure">「月々いくらになりますか」「いくらまで借りられますか」と聞かれても、その場で計算できず、後日の連絡になってしまう。</p>
-        </article>
-        <article class="problem-card">
-          <h3>現地で電波が弱い</h3>
-          <p class="measure">内見や現地調査の最中、会社のシステムに繋がらない場所は珍しくない。確認したいのに確認できない。</p>
-        </article>
-        <article class="problem-card">
-          <h3>夜の資料作成</h3>
-          <p class="measure">事務所に戻ってから、深夜にマイソクや資金計画書を作り直す。翌朝までに間に合わせるための残業が続く。</p>
-        </article>
+      <div class="stat-item">
+        <div class="stat-value">¥0</div>
+        <div class="stat-label">完全無料で開始</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">端末内<span class="ac">のみ</span></div>
+        <div class="stat-label">データの保存先</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-value">オフライン<span class="ac">OK</span></div>
+        <div class="stat-label">圏外の現地でも動く</div>
       </div>
     </div>
   </section>
 
-  <!-- 3. 営業マンの一日（タイムライン） -->
-  <section class="section" id="day">
+  <!-- 機能 -->
+  <section id="features" class="section" style="padding-block: clamp(3rem, 8vw, 7.5rem);">
     <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">営業マンの一日</h2>
-        <p class="section-sub">商談から契約準備、売却相談まで。一日の現場を、スマホ1台でその場で完結させる。</p>
+      <div class="reveal">
+        <span class="section-eyebrow">FEATURES</span>
+        <h2 class="section-title">現場で使う道具、ぜんぶ入り。</h2>
+        <p class="section-sub">物件の管理から商談・査定まで。営業の一日をカバーする、6つの道具箱。</p>
       </div>
 
-      <div class="timeline">
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-yen"></use></svg><span class="num">10:00</span> 商談中の即答</div>
-          <h3>お客様の質問に、その場で数字を出す</h3>
-          <p class="tools">使う機能: ローンシミュレーション・資金計画・家賃から買える価格・金利マスタ</p>
-          <p class="scene measure">「月々いくらになりますか」と聞かれても、ローン計算と資金計画を開けばその場で数字が出せる。今の家賃を基準にした購入可能価格も、その場で逆算できる。</p>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-compass"></use></svg><span class="num">13:00</span> 現地・内見</div>
-          <h3>方角も音も、その場で確認する</h3>
-          <p class="tools">使う機能: 方位磁石・日当たりシミュレーション・騒音メーター・現地調査チェック・写真動画</p>
-          <p class="scene measure">方角と日当たり、周辺の音を確認しながら現地調査チェックの項目を埋めていく。写真もその場で撮り、物件ごとに撮り漏れなく残せる。</p>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-doc"></use></svg><span class="num">16:00</span> 資料作成</div>
-          <h3>事務所に戻らなくても資料ができる</h3>
-          <p class="tools">使う機能: マイソクPDF・内見比較シート・資金計画書PDF</p>
-          <p class="scene measure">車の中や移動の合間に、マイソクと資金計画書のPDFを作って共有できる。複数物件を見たお客様には、内見比較シートで違いを整理して渡せる。</p>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-check"></use></svg><span class="num">18:00</span> 契約準備</div>
-          <h3>契約日が決まったら、その場で工程表を作る</h3>
-          <p class="tools">使う機能: 契約スケジュール・必要書類チェック・重説要点ガイド</p>
-          <p class="scene measure">契約日が決まったら標準6工程のスケジュールを自動生成。必要書類の準備状況を確認し、重説の要点も事前に見直しておける。</p>
-        </div>
-        <div class="timeline-item">
-          <span class="timeline-dot"></span>
-          <div class="timeline-time"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg>随時 売却相談</div>
-          <h3>「売ったらいくら？」に、その場で応える</h3>
-          <p class="tools">使う機能: スピード査定</p>
-          <p class="scene measure">売却を検討しているお客様から声をかけられても、その場でスピード査定を開いて参考価格レンジを示せる。</p>
-        </div>
+      <div class="feature-grid">
+
+        <article class="feature-card reveal">
+          <span class="feature-index">01</span>
+          <span class="feature-icon"><svg aria-hidden="true"><use href="#i-house"></use></svg></span>
+          <h3>物件管理</h3>
+          <p>預かり物件も紹介物件も、この中に。</p>
+          <div class="tag-row">
+            <span>物件一覧</span><span>Excel取込</span><span>写真・動画</span><span>マイソクPDF</span><span>現地調査チェック</span>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-index">02</span>
+          <span class="feature-icon"><svg aria-hidden="true"><use href="#i-users"></use></svg></span>
+          <h3>顧客管理</h3>
+          <p>お客様との約束と希望条件を、確実に。</p>
+          <div class="tag-row">
+            <span>面談・内覧予定</span><span>希望条件メモ</span><span>端末内のみ保存</span>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-index">03</span>
+          <span class="feature-icon"><svg aria-hidden="true"><use href="#i-calc"></use></svg></span>
+          <h3>お金の計算</h3>
+          <p>「月々いくら？」に、その場で答える。</p>
+          <div class="tag-row">
+            <span>ローンシミュレーション</span><span>資金計画</span><span>諸費用概算</span><span>家賃から買える価格</span>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-index">04</span>
+          <span class="feature-icon"><svg aria-hidden="true"><use href="#i-target"></use></svg></span>
+          <h3>現地調査</h3>
+          <p>ポケットから出す、計測ツール一式。</p>
+          <div class="tag-row">
+            <span>方位磁石</span><span>日当たりシミュレーション</span><span>騒音メーター</span><span>坪換算</span>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-index">05</span>
+          <span class="feature-icon"><svg aria-hidden="true"><use href="#i-doc-check"></use></svg></span>
+          <h3>商談・契約</h3>
+          <p>内見から引渡しまでの段取りを、一本化。</p>
+          <div class="tag-row">
+            <span>内見比較シート</span><span>契約スケジュール</span><span>必要書類</span><span>重説要点ガイド</span>
+          </div>
+        </article>
+
+        <article class="feature-card reveal">
+          <span class="feature-index">06</span>
+          <span class="feature-icon"><svg aria-hidden="true"><use href="#i-search-arc"></use></svg></span>
+          <h3>スピード査定</h3>
+          <p>「いくらで売れる？」に、参考価格を。</p>
+          <div class="tag-row">
+            <span>国交省の公開データ</span><span>参考価格をその場で</span>
+          </div>
+        </article>
+
       </div>
     </div>
   </section>
 
-  <!-- 4. 全機能一覧 -->
-  <section class="section section--alt" id="features">
+  <!-- 信頼 -->
+  <section id="trust" class="section" style="padding-block: 0.5rem clamp(3rem, 8vw, 7rem);">
     <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">全機能一覧</h2>
-        <p class="section-sub">物件・ツール・査定・設定の4つのタブに、約20の機能を用意しています。</p>
-      </div>
-
-      <div class="tab-block">
-        <div class="tab-block-head">
-          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-house"></use></svg>物件</span>
-          <h3>物件情報と現地調査を一元管理</h3>
+      <div class="trust-panel reveal">
+        <div class="trust-head">
+          <span class="section-eyebrow">TRUST</span>
+          <h2>会社のシステムではなく、<br>あなた個人の道具。</h2>
         </div>
-        <div class="feature-grid">
-          <article class="feature-card"><h4>物件一元管理</h4><p>一覧・検索・種別フィルタから登録・編集・削除まで一元管理。</p></article>
-          <article class="feature-card"><h4>Excel取込</h4><p>自作の.xlsx/.xls/.csvを列の自動マッピングで一括取込。</p></article>
-          <article class="feature-card"><h4>写真・動画</h4><p>アプリ内カメラで撮影し物件ごとに保存、動画も再生管理。</p></article>
-          <article class="feature-card"><h4>マイソクPDF</h4><p>写真・坪単価・担当者情報入りのA4販売図面をその場で作成・共有。</p></article>
-          <article class="feature-card"><h4>現地調査チェック</h4><p>カテゴリ別18項目とカスタム項目で確認漏れを防止。</p></article>
-        </div>
-      </div>
-
-      <div class="tab-block">
-        <div class="tab-block-head">
-          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-tool"></use></svg>ツール</span>
-          <h3>お金の計算・現地調査・商談と契約を支える機能</h3>
-        </div>
-
-        <p class="subgroup-label">お金の計算</p>
-        <div class="feature-grid">
-          <article class="feature-card"><h4>ローンシミュレーション</h4><p>元利均等/元金均等・ボーナス併用・返済額からの逆算・年次償還表。</p></article>
-          <article class="feature-card"><h4>資金計画・諸費用概算</h4><p>仲介手数料・税金・登記・保険まで自動概算し、資金計画書PDFへ。</p></article>
-          <article class="feature-card"><h4>家賃から買える価格</h4><p>今の家賃と同じ負担で買える価格を逆算。</p></article>
-          <article class="feature-card"><h4>住み替え手残り</h4><p>売却価格から残債・諸費用を引いた手残りと、次の購入予算の目安を試算。</p></article>
-          <article class="feature-card"><h4>利回り計算</h4><p>表面/実質利回りと返済後キャッシュフローを算出。</p></article>
-          <article class="feature-card"><h4>金利マスタ</h4><p>主要8行の金利をプリセット管理。更新タイミングも通知。</p></article>
-        </div>
-
-        <p class="subgroup-label">現地調査</p>
-        <div class="feature-grid">
-          <article class="feature-card"><h4>方位磁石</h4><p>真方位優先で16方位と住宅表記の向きを表示。</p></article>
-          <article class="feature-card"><h4>日当たりシミュレーション</h4><p>太陽位置計算で、季節・時刻ごとの日当たりをオフラインで判定。</p></article>
-          <article class="feature-card"><h4>騒音メーター</h4><p>その場で簡易的な音の大きさを計測し、物件メモに追記保存。</p></article>
-          <article class="feature-card"><h4>坪・㎡・畳換算</h4><p>坪・㎡・畳を3方向即時換算。坪単価⇔㎡単価も。</p></article>
-          <article class="feature-card"><h4>建ぺい率・容積率</h4><p>前面道路制限やセットバックを踏まえて概算。</p></article>
-        </div>
-
-        <p class="subgroup-label">商談・契約</p>
-        <div class="feature-grid">
-          <article class="feature-card"><h4>内見比較シート</h4><p>物件2〜4件を◎○△で比較し、表形式で共有。</p></article>
-          <article class="feature-card"><h4>契約スケジュール</h4><p>標準6工程を自動生成。土日は翌営業日に自動調整。</p></article>
-          <article class="feature-card"><h4>必要書類チェック</h4><p>属性・フェーズ別に必要書類を整理し、テキストで共有。</p></article>
-          <article class="feature-card"><h4>重説要点ガイド</h4><p>種別別53項目の説明ポイントと事前確認事項を検索・確認。</p></article>
-        </div>
-      </div>
-
-      <div class="tab-block">
-        <div class="tab-block-head">
-          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-gauge"></use></svg>査定</span>
-          <h3>売却相談のその場で参考価格を</h3>
-        </div>
-        <div class="feature-grid">
-          <article class="feature-card"><h4>スピード査定</h4><p>国土交通省「不動産情報ライブラリ」のデータから参考価格レンジを算出。</p></article>
-        </div>
-      </div>
-
-      <div class="tab-block">
-        <div class="tab-block-head">
-          <span class="tab-chip"><svg class="icon" aria-hidden="true"><use href="#i-gear"></use></svg>設定</span>
-          <h3>アプリまわりの管理</h3>
-        </div>
-        <div class="feature-grid">
-          <article class="feature-card"><h4>各種設定</h4><p>査定APIキーの登録・取得方法の案内、金利マスタへの導線、アプリ情報を管理。</p></article>
+        <div class="trust-grid">
+          <div class="trust-item">
+            <span class="trust-icon"><svg aria-hidden="true"><use href="#i-lock-device"></use></svg></span>
+            <h3>データは端末内のみ</h3>
+            <p>顧客情報も物件メモも、保存先はこのiPhoneだけ。外部サーバーには送信しません。</p>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon"><svg aria-hidden="true"><use href="#i-wifi-slash"></use></svg></span>
+            <h3>オフラインでも動く</h3>
+            <p>電波の届かない現地や内覧先でも、多くの機能はそのまま使えます。ネット接続が必要なのは、スピード査定と外部リンクを開くときだけです。</p>
+          </div>
+          <div class="trust-item">
+            <span class="trust-icon"><svg aria-hidden="true"><use href="#i-user-check"></use></svg></span>
+            <h3>会社契約・登録不要</h3>
+            <p>個人のiPhoneに入れるだけ。導入稟議もアカウント作成も要りません。</p>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 5. 3つのこだわり -->
-  <section class="section" id="pillars">
+  <!-- 料金 -->
+  <section id="pricing" class="section" style="background: var(--bg-raised); border-top: 1px solid var(--border-soft); border-bottom: 1px solid var(--border-soft); padding-block: clamp(3rem, 8vw, 7.5rem);">
     <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">3つのこだわり</h2>
-        <p class="section-sub">会社導入型のSaaSではなく、営業マン個人のためのツールとして設計しています。</p>
+      <div class="reveal" style="text-align:center;">
+        <span class="section-eyebrow">PRICING</span>
+        <h2 class="section-title">料金は、シンプルに。</h2>
+        <p class="section-sub" style="margin-inline:auto;">現在提供中の機能は、すべて無料でご利用いただけます。</p>
       </div>
-      <div class="pillars-grid">
-        <article class="pillar-card">
-          <span class="pillar-icon"><svg class="icon" aria-hidden="true"><use href="#i-device"></use></svg></span>
-          <h3>会社契約・アカウント発行不要</h3>
-          <p>会社のシステム導入や管理者によるアカウント発行を待つ必要はありません。個人のスマホ1台があれば、今日から使い始められます。</p>
-        </article>
-        <article class="pillar-card">
-          <span class="pillar-icon"><svg class="icon" aria-hidden="true"><use href="#i-lock"></use></svg></span>
-          <h3>データはすべて端末内保存</h3>
-          <p>物件情報や写真、設定はすべて端末内に保存され、クラウドへは送信されません。お客様の情報を扱う不安を減らします。</p>
-        </article>
-        <article class="pillar-card">
-          <span class="pillar-icon"><svg class="icon" aria-hidden="true"><use href="#i-offline"></use></svg></span>
-          <h3>オフライン優先</h3>
-          <p>現地で電波が弱くても、主要な機能は動作します。ネット接続が必要なのは、査定APIと外部リンクを開くときだけです。</p>
-        </article>
+      <div class="pricing-grid reveal">
+        <div class="price-card">
+          <span class="price-flag"><span class="dot"></span>現在ご利用いただけるプラン</span>
+          <h3>無料プラン</h3>
+          <div class="price-amount"><span class="num">¥0</span><span class="unit">登録不要で今すぐ</span></div>
+          <div class="price-rule"></div>
+          <ul class="price-list">
+            <li><svg aria-hidden="true"><use href="#i-check"></use></svg>24の機能をすべて利用可能</li>
+            <li><svg aria-hidden="true"><use href="#i-check"></use></svg>アカウント登録なしで開始</li>
+            <li><svg aria-hidden="true"><use href="#i-check"></use></svg>データは端末内のみに保存</li>
+            <li><svg aria-hidden="true"><use href="#i-check"></use></svg>多くの機能をオフラインで利用可能</li>
+          </ul>
+        </div>
+        <div class="price-card price-card--future">
+          <span class="price-flag price-flag--future">将来予定</span>
+          <h3>プレミアム</h3>
+          <div class="price-amount"><span class="num">¥980</span><span class="unit">/月</span></div>
+          <div class="price-rule"></div>
+          <p>さらに高度な機能を提供予定です。内容・提供時期は未定のため、決まり次第お知らせします。現在は、すべての機能を無料プランでご利用いただけます。</p>
+        </div>
       </div>
+      <p class="pricing-footnote">価格・プラン内容は公開時に変更となる場合があります。</p>
     </div>
   </section>
 
-  <!-- 6. 価格 -->
-  <section class="section section--alt" id="pricing">
-    <div class="container">
-      <div class="section-head">
-        <h2 class="section-title">価格</h2>
-        <p class="section-sub">まずは無料で試せます。すべての機能を使いたい方にはプレミアムプランを予定しています。</p>
-      </div>
-      <div class="pricing-grid">
-        <article class="price-card">
-          <div class="price-plan">無料プラン</div>
-          <div class="price-amount num">¥0</div>
-          <div class="price-sub">基本無料ではじめられます</div>
-          <p class="price-desc">まずは無料で、日々の営業に役立つ機能をお試しいただけます。</p>
-        </article>
-        <article class="price-card price-card--premium">
-          <div class="price-plan">プレミアムプラン</div>
-          <div class="price-amount num">¥980 <span class="unit">/ 月</span></div>
-          <div class="price-sub num">年額 ¥9,800（税込・予定）</div>
-          <p class="price-desc">すべての機能を制限なくご利用いただけます。</p>
-        </article>
-      </div>
-      <p class="price-note">価格・プラン内容は公開時に変更となる場合があります。</p>
-    </div>
-  </section>
-
-  <!-- 7. FAQ -->
-  <section class="section" id="faq">
-    <div class="container">
-      <div class="section-head">
+  <!-- FAQ -->
+  <section id="faq" class="section" style="padding-block: clamp(3rem, 8vw, 7.5rem);">
+    <div class="container faq-wrap">
+      <div class="reveal" style="text-align:center;">
+        <span class="section-eyebrow">FAQ</span>
         <h2 class="section-title">よくある質問</h2>
       </div>
-      <div class="faq-list">
+
+      <div class="faq-list reveal">
         <details class="faq-item">
-          <summary>対応OSを教えてください<span class="chev">▾</span></summary>
-          <p class="faq-a">iOS・Androidに対応予定です。現在近日公開に向けて準備中で、ストアURLは未定です。</p>
+          <summary>本当に無料で使えますか？<span class="faq-icon" aria-hidden="true"><svg><use href="#i-plus"></use></svg></span></summary>
+          <p class="faq-answer">はい。現在提供中の機能はすべて無料で、課金なしで使い始められます。将来的にプレミアムプラン（月額980円）の提供を予定しています。</p>
         </details>
         <details class="faq-item">
-          <summary>入力したデータはどこに保存されますか<span class="chev">▾</span></summary>
-          <p class="faq-a">物件情報や写真、設定はすべて端末内に保存され、クラウドへは送信されません。</p>
+          <summary>アカウント登録は必要ですか？<span class="faq-icon" aria-hidden="true"><svg><use href="#i-plus"></use></svg></span></summary>
+          <p class="faq-answer">不要です。インストールすれば、メールアドレスの入力や会員登録なしで、そのまますぐに使い始められます。</p>
         </details>
         <details class="faq-item">
-          <summary>査定は何のデータをもとにしていますか<span class="chev">▾</span></summary>
-          <p class="faq-a">国土交通省が提供する「不動産情報ライブラリ」のAPIを利用しています。ご利用には無料のAPIキー申請が必要で、算出される価格はあくまで参考価格です。</p>
+          <summary>顧客や物件のデータはどこに保存されますか？<span class="faq-icon" aria-hidden="true"><svg><use href="#i-plus"></use></svg></span></summary>
+          <p class="faq-answer">すべてお使いの端末の中にのみ保存され、外部のサーバーに送信されることはありません。ただし、スピード査定機能をご利用の際は、国土交通省の公開データに問い合わせるためインターネット接続が必要です。</p>
         </details>
         <details class="faq-item">
-          <summary>利用にあたって会社の許可は必要ですか<span class="chev">▾</span></summary>
-          <p class="faq-a">個人が使う現場ツールで、会社のシステムとの連携はありません。ご自身の判断でお使いいただけます。</p>
+          <summary>オフラインでも使えますか？<span class="faq-icon" aria-hidden="true"><svg><use href="#i-plus"></use></svg></span></summary>
+          <p class="faq-answer">多くの機能はオフラインで、電波の届かない現地や内覧先でもそのままお使いいただけます。スピード査定や外部リンクを開く場合のみ、インターネット接続が必要です。</p>
         </details>
         <details class="faq-item">
-          <summary>電波が弱い場所でも使えますか<span class="chev">▾</span></summary>
-          <p class="faq-a">主要な機能はオフライン優先で動作します。ネット接続が必要なのは、査定APIと外部リンクを利用するときだけです。</p>
+          <summary>会社としての契約や許可は必要ですか？<span class="faq-icon" aria-hidden="true"><svg><use href="#i-plus"></use></svg></span></summary>
+          <p class="faq-answer">本アプリは個人向けのため、会社としての導入や契約は不要です。なお、顧客情報の取り扱いは所属先の規定に従ってご利用ください。</p>
+        </details>
+        <details class="faq-item">
+          <summary>スピード査定の価格は、どのように算出されますか？<span class="faq-icon" aria-hidden="true"><svg><use href="#i-plus"></use></svg></span></summary>
+          <p class="faq-answer">国土交通省「不動産情報ライブラリ」が公開する不動産取引データをもとに算出した参考価格レンジです。ご利用には無料のAPIキー登録が必要で、未登録の場合はデモモードで表示されます。正式な査定額を保証するものではありません。</p>
         </details>
       </div>
+    </div>
+  </section>
+
+  <!-- 最終CTA -->
+  <section id="cta" class="cta-section">
+    <div class="cta-inner reveal">
+      <h2>次の商談から、<br><span class="ac" style="color: var(--ac);">ポケットに。</span></h2>
+      <p>登録不要・完全無料で開始。App Storeにて近日公開予定です。</p>
+      <div class="cta-store">
+        <span class="store-badge store-badge--lg" role="button" aria-disabled="true" tabindex="-1">
+          <svg class="apple-icon" aria-hidden="true"><use href="#i-apple"></use></svg>
+          <span>
+            <span class="store-badge-label" style="display:block;">近日公開</span>
+            <span class="store-badge-name">App Store</span>
+          </span>
+        </span>
+      </div>
+      <p class="cta-note">iOS向け ・ データは端末内のみ ・ オフラインOK</p>
     </div>
   </section>
 
 </main>
 
-<!-- 8. フッター -->
 <footer class="site-footer">
   <div class="container">
-    <p class="concept">営業マン個人が、自分のスマホ1台で、接客のその場で完結。</p>
-    <p class="soon">エステートパートナー（EstatePartner）は iOS / Android 向けに近日公開予定です。</p>
-    <div class="footer-rule">
-      <p class="disclaimer">本アプリの計算・査定結果はすべて概算・参考値です。正式な金額・法令適合は各専門家・役所にご確認ください。価格・プラン内容は公開時に変更となる場合があります。</p>
-      <p class="footer-links">
+    <div class="footer-top">
+      <div>
+        <div class="footer-brand-row">
+          <span class="brand-badge"><svg aria-hidden="true"><use href="#i-logo"></use></svg></span>
+          <span class="brand-name">エステートパートナー</span>
+        </div>
+        <p class="footer-tagline">不動産営業マンのための、個人向けiOSツールボックス。</p>
+      </div>
+      <nav class="footer-links" aria-label="フッターリンク">
         <a href="privacy.html">プライバシーポリシー</a>
         <a href="support.html">サポート</a>
-      </p>
-      <p class="copyright">&copy; 2026 EstatePartner</p>
+      </nav>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-disclaimers">
+        <p>※スピード査定の価格は、国土交通省の公開データに基づく参考価格であり、査定額を保証するものではありません。</p>
+        <p>※本アプリの計算・査定結果はすべて概算・参考値です。正式な金額・法令適合は各専門家・役所にご確認ください。価格・プラン内容は公開時に変更となる場合があります。</p>
+      </div>
+      <div class="footer-copyright">© 2026 EstatePartner</div>
     </div>
   </div>
 </footer>
+
+<script>
+(function () {
+  'use strict';
+  if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    return;
+  }
+  if (!('IntersectionObserver' in window)) {
+    return;
+  }
+  var targets = document.querySelectorAll('.reveal');
+  var observer = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+  targets.forEach(function (el) {
+    el.classList.add('js-anim');
+    observer.observe(el);
+  });
+})();
+</script>
 
 </body>
 </html>
